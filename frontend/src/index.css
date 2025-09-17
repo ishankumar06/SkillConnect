@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* Webkit browsers (Chrome, Edge, Safari) */
+main::-webkit-scrollbar {
+  width: 8px; /* Scrollbar width */
+}
+
+main::-webkit-scrollbar-track {
+  background: transparent; /* Track background */
+}
+
+main::-webkit-scrollbar-thumb {
+  background-color: white; /* Scroll thumb color: white */
+  border-radius: 4px;
+  border: 2px solid transparent; /* Padding around thumb */
+  background-clip: content-box; 
+}
+
+/* Firefox */
+main {
+  scrollbar-width: thin;
+  scrollbar-color: white transparent;
+}
+
+/* ye sidebar ka scrobbale hai */
+
+aside::-webkit-scrollbar {
+  width: 8px;
+}
+
+aside::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+aside::-webkit-scrollbar-thumb {
+  background-color: white;
+  border-radius: 4px;
+  border: 2px solid transparent; 
+  background-clip: content-box;
+}
+
+aside {
+  scrollbar-width: thin;
+  scrollbar-color: white transparent;
+}
