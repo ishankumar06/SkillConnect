@@ -83,7 +83,7 @@ export default function Connection() {
 
   // Filter connections by name substring (case-insensitive)
   const filteredProfiles = connectedProfiles.filter((user) =>
-    user.name.toLowerCase().includes(searchTerm.toLowerCase())
+    user.fullName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Handle unfollow: remove the userId from current user's connections
@@ -112,7 +112,7 @@ export default function Connection() {
         filteredProfiles.map((user) => (
           <ConnectionItem
             key={user._id}
-            name={user.name}
+            name={user.fullName}
             title={user.role || user.title}
             avatarUrl={user.profilePic || user.avatarUrl}
             onUnfollow={() => unfollowUser(user._id)}

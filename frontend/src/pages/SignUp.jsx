@@ -499,18 +499,19 @@ export default function Signup() {
 
     if (Object.keys(formErrors).length === 0) {
       try {
-        const payload = {
-          name: form.name.trim(),
-          email: form.email.trim(),
-          password: form.password,
-          contact: form.contact.trim(),
-          role: form.role.trim(),
-          location: form.location.trim(),
-          bio: form.bio.trim(),
-          education: form.education.trim(),
-          about: form.about.trim(),
-          profilePic: form.profilePic,
-        };
+      const payload = {
+  fullName: form.name.trim(),
+  email: form.email.trim(),
+  password: form.password,
+  contact: form.contact.trim(),
+  role: form.role.trim(),
+  location: form.location.trim(),
+  bio: form.bio.trim(),
+  education: form.education.trim(),
+  about: form.about.trim(),
+  profilePic: form.profilePic,
+};
+
 
         const response = await api.post("/auth/signup", payload);
         const { token, user } = response.data;

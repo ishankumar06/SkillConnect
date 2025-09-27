@@ -166,7 +166,7 @@ export default function Applicants() {
                 className={`border p-4 rounded shadow ${isCurrentUser ? "border-blue-600 bg-blue-50" : ""}`}
               >
                 <h3 className="font-semibold text-xl">
-                  {applicant.name}
+                  {applicant.fullName}
                   {isCurrentUser && <span className="ml-2 text-sm text-blue-700">(You)</span>}
                 </h3>
                 <p>

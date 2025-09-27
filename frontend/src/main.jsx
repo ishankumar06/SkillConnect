@@ -9,6 +9,7 @@ import { ApplicationProvider } from "./context/ApplicationContext";
 import { UsersProvider } from "./context/UsersContext";
 import { SavedPostsProvider } from "./context/SaveContext";  
 import "./index.css";
+import { ChatProvider } from "./context/ChatContext";
 
 
 ReactDOM.createRoot(document.getElementById("root")).render(
@@ -20,7 +21,10 @@ ReactDOM.createRoot(document.getElementById("root")).render(
             <ApplicationProvider>
               <UsersProvider>
                 <SavedPostsProvider>
-                  <App />
+                  <ChatProvider>
+                     <App />
+                  </ChatProvider>
+                  
                 </SavedPostsProvider>
               </UsersProvider>
             </ApplicationProvider>

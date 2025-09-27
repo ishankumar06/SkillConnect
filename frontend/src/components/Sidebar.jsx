@@ -93,8 +93,9 @@ updateProfile({ connections: updatedConnections });
           </Link>
         ))}
       </nav>
+      {/* the bellow code in case want to implement the promotimon */}
 
-      <div className="mb-6 bg-blue-50 rounded-xl p-4 text-center text-blue-800 font-semibold shadow">
+      {/* <div className="mb-6 bg-blue-50 rounded-xl p-4 text-center text-blue-800 font-semibold shadow">
         <p>🔥 Special Promotion: Upgrade your profile today!</p>
         <button
           onClick={() => navigate("/promotion")}
@@ -102,7 +103,7 @@ updateProfile({ connections: updatedConnections });
         >
           Learn More
         </button>
-      </div>
+      </div> */}                             
 
       <div>
         <div className="flex justify-between items-center mb-3">
@@ -127,11 +128,11 @@ updateProfile({ connections: updatedConnections });
                   <div className="flex items-center gap-3 cursor-pointer flex-grow min-w-0">
                     <img
                       src={user.profilePic || user.avatarUrl}
-                      alt={user.name}
+                      alt={user.fullName}
                       className="w-10 h-10 rounded-full object-cover flex-shrink-0"
                     />
                     <div className="truncate">
-                      <p className="font-medium text-gray-800 text-sm truncate">{user.name}</p>
+                      <p className="font-medium text-gray-800 text-sm truncate">{user.fullName}</p>
                       <p className="text-xs text-gray-500 truncate">{user.role || user.title}</p>
                     </div>
                   </div>

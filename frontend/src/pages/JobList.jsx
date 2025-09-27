@@ -324,7 +324,7 @@ export default function JobList() {
                   </div>
 
                   <div className="flex gap-3 mt-4">
-                    <Button type="submit" className="bg-green-600 hover:bg-green-700">
+                    <Button type="submit" className="bg-green-500/30 hover:bg-green-700/30">
                       Save Changes
                     </Button>
                     <Button

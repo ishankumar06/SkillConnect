@@ -51,7 +51,7 @@ console.log("id",_id);
 
   // Resolve display author name (string or object)
   const displayAuthor =
-    typeof author === "string" ? author : author?.name || "Unknown Company";
+    typeof author === "string" ? author : author?.fullName || "Unknown Company";
 
   // Resolve profile pic with fallbacks
   const displayProfilePic =

@@ -62,7 +62,7 @@ export default function JobSearch() {
 
             // Resolve author name safely
             const authorName =
-              authorUser?.name ||
+              authorUser?.fullName ||
               (typeof job.author === "string" ? job.author.trim() : "") ||
               (job.company && job.company.trim()) || // fallback company name
               "Job by Someone";

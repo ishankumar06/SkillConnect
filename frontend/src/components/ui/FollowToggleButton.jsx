@@ -31,7 +31,7 @@ export default function FollowToggleButton({ targetUserId }) {
       onClick={toggleFollow}
       className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs transition border whitespace-nowrap ${
         isFollowing
-          ? "bg-green-600 text-white border-green-600 hover:bg-green-700"
+          ? "bg-green-500/30 text-white border-green-500/30 hover:bg-green-500/30"
           : "bg-transparent text-gray-700 border-gray-400 hover:bg-gray-100"
       }`}
     >
