@@ -3,6 +3,7 @@ import PostCard from "../components/PostCard";
 import SearchBar from "../components/SearchBar";
 import { useJob } from "../context/JobContext";
 import { useUsers } from "../context/UsersContext";
+import bgImage from '../assets/bgImage.png';
 
 export default function JobSearch() {
   const { jobs, fetchJobs } = useJob();
@@ -44,7 +45,14 @@ export default function JobSearch() {
     "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=60";
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100 p-6 space-y-6">
+    <div className="flex flex-col min-h-screen bg-gray-100 p-6 space-y-6"
+    style={{
+            backgroundImage: `url(${bgImage})`,
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+          >
       <h2 className="text-2xl font-bold text-blue-800 mb-4">Search for Jobs</h2>
 
       <SearchBar onSearch={handleSearch} value={searchTerm} />

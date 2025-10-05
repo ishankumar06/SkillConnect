@@ -1,66 +1,3 @@
-
-
-// import React, { createContext, useContext, useState, useEffect } from "react";
-// import { useNavigate } from "react-router-dom";
-// import { jwtDecode } from "jwt-decode";
-// import api from "../api";
-
-// const AuthContext = createContext();
-
-// export function AuthProvider({ children }) {
-//   const [authLoading, setAuthLoading] = useState(true);
-//   const [token, setToken] = useState(localStorage.getItem("authToken") || null);
-//   const [userId, setUserId] = useState(null);
-//   const [userRole, setUserRole] = useState(null);
-//   const navigate = useNavigate();
-
-//   useEffect(() => {
-//     if (token) {
-//       try {
-//         const decoded = jwtDecode(token);
-//         const now = Date.now() / 1000;
-//         if (decoded.exp < now) {
-//           logout();
-//         } else {
-//           setUserId(decoded._id || decoded.userId || null);
-//           setUserRole(decoded.role || null);
-//         }
-//       } catch (err) {
-//         console.error("Invalid token:", err);
-//         logout();
-//       }
-//     } else {
-//       setUserId(null);
-//       setUserRole(null);
-//     }
-//     setAuthLoading(false);
-//   }, [token]);
-
-//   const login = (jwtToken) => {
-//     localStorage.setItem("authToken", jwtToken);
-//     setToken(jwtToken);
-    
-//     navigate("/");
-//   };
-
-//   const logout = () => {
-//     localStorage.removeItem("authToken");
-//     setToken(null);
-//     navigate("/login");
-//   };
-
-//   return (
-//     <AuthContext.Provider
-//       value={{ authLoading, token, userId, userRole, login, logout }}
-//     >
-//       {children}
-//     </AuthContext.Provider>
-//   );
-// }
-
-// export const useAuth = () => useContext(AuthContext);
-// // ...existing code...
-
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
@@ -136,6 +73,7 @@ export function AuthProvider({ children }) {
       localStorage.setItem("authToken", stateOrToken);
       localStorage.setItem("token", stateOrToken);
       setToken(stateOrToken);
+       connectSocket(data.user);
       navigate("/");
       return;
     }

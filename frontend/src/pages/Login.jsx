@@ -5,6 +5,7 @@ import { useUserProfile } from "../context/UserProfileContext";
 import { useUsers } from "../context/UsersContext";
 import api from "../api";
 import skillLogo from "../assets/skill.png";
+import bgImage from '../assets/bgImage.png';
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -43,7 +44,15 @@ export default function Login() {
   };
 
   return (
-    <div className="relative flex items-center justify-center min-h-screen bg-gray-100 px-4">
+    <div className="relative flex items-center justify-center min-h-screen bg-gray-100 px-4"
+    
+    style={{
+            backgroundImage: `url(${bgImage})`,
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+          >
       <div className="absolute top-4 left-4">
         <img src={skillLogo} alt="SkillConnect Logo" className="h-12 w-auto" />
       </div>

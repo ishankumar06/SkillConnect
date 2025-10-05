@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
-import { AuthContext } from '../context/AuthContext';
+import { AuthContext } from "../context/AuthContext";
 import { toast } from "react-hot-toast";
 
 export const ChatContext = createContext();
@@ -30,7 +30,6 @@ export const ChatProvider = ({ children }) => {
     try {
       const { data } = await axios.get(`/api/messages/${userId}`);
       if (data.success) {
-      
         setMessages(data.messages);
       }
     } catch (error) {
@@ -51,7 +50,7 @@ export const ChatProvider = ({ children }) => {
           ...data.newMessage,
           senderProfilePic: authUser?.profilePic || null,
         };
-        setMessages(prevMessages => [...prevMessages, enrichedNewMessage]);
+        setMessages((prevMessages) => [...prevMessages, enrichedNewMessage]);
       } else {
         toast.error(data.message || "Failed to send message");
       }
@@ -65,8 +64,9 @@ export const ChatProvider = ({ children }) => {
     if (!socket) return;
     socket.on("newMessage", (newMessage) => {
       // Find sender in users or use authUser if it matches
-      const senderUser = users.find(u => u._id === newMessage.senderId) 
-        || (authUser && authUser._id === newMessage.senderId ? authUser : null);
+      const senderUser =
+        users.find((u) => u._id === newMessage.senderId) ||
+        (authUser && authUser._id === newMessage.senderId ? authUser : null);
 
       const enrichedMessage = {
         ...newMessage,
@@ -75,12 +75,12 @@ export const ChatProvider = ({ children }) => {
 
       if (selectedUser && newMessage.senderId === selectedUser._id) {
         enrichedMessage.seen = true;
-        setMessages(prevMessages => [...prevMessages, enrichedMessage]);
+        setMessages((prevMessages) => [...prevMessages, enrichedMessage]);
         axios.put(`/api/messages/mark/${newMessage._id}`).catch(() => {
           toast.error("Failed to mark message as seen");
         });
       } else {
-        setUnseenMessages(prev => ({
+        setUnseenMessages((prev) => ({
           ...prev,
           [newMessage.senderId]: prev[newMessage.senderId] ? prev[newMessage.senderId] + 1 : 1,
         }));
@@ -98,6 +98,9 @@ export const ChatProvider = ({ children }) => {
     return () => unsubscribeFromMessages();
   }, [socket, selectedUser]);
 
+  // Compute total unread messages count from unseenMessages object
+  const unreadCount = Object.values(unseenMessages).reduce((total, count) => total + count, 0);
+
   const value = {
     messages,
     users,
@@ -108,7 +111,17 @@ export const ChatProvider = ({ children }) => {
     setSelectedUser,
     unseenMessages,
     setUnseenMessages,
+    unreadCount, // expose unreadCount for badges
   };
 
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;
+};
+
+// Custom hook to use the ChatContext easily
+export const useChat = () => {
+  const context = useContext(ChatContext);
+  if (!context) {
+    throw new Error("useChat must be used within a ChatProvider");
+  }
+  return context;
 };

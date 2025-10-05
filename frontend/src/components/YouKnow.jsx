@@ -3,6 +3,7 @@ import { UserPlus } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useUserProfile } from "../context/UserProfileContext";
 import { useUsers } from "../context/UsersContext";
+import bgImage from '../assets/bgImage.png';
 
 export default function YouKnow() {
   const { userId } = useAuth();
@@ -47,7 +48,14 @@ updateProfile({ connections: updatedConnections });
   };
 
   return (
-    <div className="bg-white shadow p-4 mb-6 rounded-lg max-w-full overflow-x-auto">
+    <div className="bg-white shadow p-4 mb-6 rounded-lg max-w-full overflow-x-auto"
+    style={{
+            backgroundImage: `url(${bgImage})`,
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+          >
       <h2 className="text-lg font-semibold text-gray-800 mb-3">Suggested for you</h2>
       <ul className="flex flex-col gap-3 min-w-[300px]">
         {suggestions.length === 0 ? (

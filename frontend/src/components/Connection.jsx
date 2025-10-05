@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useUserProfile } from "../context/UserProfileContext";
 import { useUsers } from "../context/UsersContext";
+import bgImage from '../assets/bgImage.png';
 
 function ConnectionItem({ name, title, avatarUrl, onUnfollow }) {
   const [showConfirm, setShowConfirm] = useState(false);
@@ -95,7 +96,13 @@ export default function Connection() {
   };
 
   return (
-    <div className="w-full px-6 py-6 bg-gray-50 rounded-2xl shadow-md mt-6 min-h-screen">
+    <div className="w-full px-6 py-6 bg-gray-50 rounded-2xl shadow-md mt-6 min-h-screen"
+    style={{
+        backgroundImage: `url(${bgImage})`,
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Your Connected Profiles</h1>
         {/* Search input */}

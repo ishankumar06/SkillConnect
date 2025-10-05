@@ -4,6 +4,7 @@ import Card from "../components/ui/Card";
 import Button from "../components/ui/Button";
 import { useJob } from "../context/JobContext";
 import { useAuth } from "../context/AuthContext";
+import bgImage from '../assets/bgImage.png';
 
 export default function JobList() {
   const navigate = useNavigate();
@@ -178,7 +179,14 @@ export default function JobList() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100 p-6 space-y-6">
+    <div className="flex flex-col min-h-screen bg-gray-100 p-6 space-y-6"
+    style={{
+        backgroundImage: `url(${bgImage})`,
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+      >
       <h2 className="text-2xl font-bold text-blue-800 mb-4">Jobs You Posted</h2>
 
       {userJobs.length === 0 ? (

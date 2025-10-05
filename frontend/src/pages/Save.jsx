@@ -2,6 +2,7 @@ import React from "react";
 import { useSavedPosts } from "../context/SaveContext";
 import PostCard from "../components/PostCard";
 import { Trash2 } from "lucide-react";
+import bgImage from '../assets/bgImage.png';
 
 export default function Save() {
   const { savedPosts, removeSavedPost, loading, error } = useSavedPosts();
@@ -17,7 +18,14 @@ export default function Save() {
     );
 
   return (
-    <div className="max-w-4xl mx-auto p-4 space-y-6">
+    <div className="max-w-4xl mx-auto p-4 space-y-6"
+    style={{
+            backgroundImage: `url(${bgImage})`,
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+          >
       <h1 className="text-3xl font-bold mb-6">Saved Posts</h1>
       {savedPosts.map((savedPost) => {
         const originalPost = savedPost.postId || {};

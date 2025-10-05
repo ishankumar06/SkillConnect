@@ -14,20 +14,19 @@ import adminRoutes from "./routes/adminRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import savedPostsRoutes from "./routes/savedPostsRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
+import notificationRoutes from "./routes/notificationRoutes.js";
 
 dotenv.config();
 
-//these areee calll after dotenv.config();
+//these are call after dotenv.config();
 import { initCloudinary } from "./config/cloudinary.js";
-
-initCloudinary();
-
+// initCloudinary();
 
 const allowedOrigins = ["http://localhost:5173"];
 const app = express();
 const server = http.createServer(app);
 
-// Initialize socket.io with CORS config
+// socket io server initialization 
 export const io = new Server(server, {
   cors: {
     origin: allowedOrigins,
@@ -35,8 +34,8 @@ export const io = new Server(server, {
   },
 });
 
-// Map to track online user socket IDs
-export const userSocketMap = {}; // key: userId, value: socketId
+// Map to track the online users: key = userId, value = socketId
+export const userSocketMap = {};
 
 // JWT authentication middleware for socket connections
 io.use((socket, next) => {
@@ -53,7 +52,7 @@ io.use((socket, next) => {
   }
 });
 
-// socket.io connection handler
+// Socket.io connection handler
 io.on("connection", (socket) => {
   const userId = socket.userId;
   console.log("User Connected", userId);
@@ -69,6 +68,15 @@ io.on("connection", (socket) => {
     io.emit("getOnlineUsers", Object.keys(userSocketMap));
   });
 });
+
+// Helper to emit notification events over socket.io if user is online
+export const emitNotificationToUser = (userId, notificationData) => {
+  const socketId = userSocketMap[userId];
+  if (socketId) {
+    io.to(socketId).emit('newNotification', notificationData);
+    console.log(`Emitted newNotification to user ${userId} on socket ${socketId}`);
+  }
+};
 
 // Middleware to parse JSON and handle CORS
 app.use(express.json({ limit: "50mb" }));
@@ -90,9 +98,10 @@ app.use("/api/users", userRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/applications", applicationRoutes);
 app.use("/api/admin", adminRoutes);
-app.use("/api/auth", authRoutes);  // mounted only once here
+app.use("/api/auth", authRoutes);
 app.use("/api/saved-posts", savedPostsRoutes);
 app.use("/api/messages", messageRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 // Basic health check endpoint
 app.get("/", (req, res) => {
@@ -100,7 +109,6 @@ app.get("/", (req, res) => {
 });
 
 // Start server after DB and Cloudinary connections are ready
-// Optional function to verify Cloudinary config before starting server
 const connectCloudinary = () => {
   if (!process.env.CLOUDINARY_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_SECRET_KEY) {
     throw new Error("Cloudinary environment variables missing!");
@@ -111,16 +119,18 @@ const connectCloudinary = () => {
 const startServer = async () => {
   try {
     await connectDB();
-    connectCloudinary(); // Verify Cloudinary environment here
+    connectCloudinary();
+    initCloudinary();
 
     const PORT = process.env.PORT || 4000;
     server.listen(PORT, () => {
-      console.log(`🚀 Server started on port: ${PORT}`);
+      console.log(`Server started on port: ${PORT}`);
     });
   } catch (err) {
-    console.error("❌ Failed to start server:", err.message);
+    console.error("Failed to start server:", err.message);
     process.exit(1);
   }
 };
 
 startServer();
+

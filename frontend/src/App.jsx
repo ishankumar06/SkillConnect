@@ -60,54 +60,50 @@ function ProtectedLayout() {
 export default function App() {
   return (
     <Routes>
-      {/* Public routes */}
-      <Route path="/login" element={<Login />} />
-      <Route path="/signup" element={<Signup />} />
+  {/* Public routes */}
+  <Route path="/login" element={<Login />} />
+  <Route path="/signup" element={<Signup />} />
 
-      {/* Protected routes */}
-      <Route
-        path="/*"
-        element={
-          <ProtectedRoute>
-            <ProtectedLayout />
-          </ProtectedRoute>
-        }
-      >
-        {/* Root redirect to home */}
+  {/* Protected routes */}
+  <Route
+    path="/*"
+    element={
+      <ProtectedRoute>
+        <ProtectedLayout />
+      </ProtectedRoute>
+    }
+  >
+    {/* Root redirect to home */}
+    <Route index element={<Home />} />
+    <Route path="about" element={<About />} />
+    <Route path="jobsearch" element={<JobSearch />} />
+    <Route path="joblist" element={<JobList />} />
+    <Route path="notifications" element={<Notifications />} />
+    <Route path="profile" element={<Profile />} />
+    <Route path="postsection" element={<PostSection />} />
+    <Route path="connections" element={<Connection />} />
+    <Route path="youknow" element={<YouKnow />} />
+    <Route path="promotion" element={<Promotion />} />
+    <Route path="save" element={<Save />} />
+    <Route path="apply/:id" element={<Apply />} />
+    <Route path="applicants/:jobId" element={<Applicants />} />
 
+    {/* Add chat route here BEFORE the catch-all */}
+    <Route path="chat/:id" element={<Messaging />} />
+    <Route path="jobs/:id" element={<JobList />} />
+    <Route path="job/:id" element={<JobSearch/>} />
+     
 
+    <Route path="messaging" element={<Messaging />} />
+    <Route path="applied" element={<Applied />} />
 
+    {/* Catch-all: redirect unknown protected URLs to home */}
+    <Route path="*" element={<Navigate to="/" replace />} />
+  </Route>
 
-        <Route index element={<Home />} />
-        <Route path="about" element={<About />} />
-        <Route path="jobsearch" element={<JobSearch />} />
-        <Route path="joblist" element={<JobList />} />
-        {/* <Route path="myprofile" element={<MyProfile />} /> */}
-        <Route path="notifications" element={<Notifications />} />
-        <Route path="profile" element={<Profile />} />
-        <Route path="postsection" element={<PostSection />} />
-        <Route path="connections" element={<Connection />} />
-        <Route path="youknow" element={<YouKnow />} />
-        <Route path="promotion" element={<Promotion />} />
+  {/* Catch-all for any non-auth routes: redirect to login */}
+  <Route path="*" element={<Navigate to="/login" replace />} />
+</Routes>
 
-        {/* Save page route added */}
-        <Route path="save" element={<Save />} />
-
-        {/* Updated Apply route with dynamic job ID */}
-        <Route path="apply/:id" element={<Apply />} />
-
-        {/* Updated Applicants route with dynamic jobId param */}
-        <Route path="applicants/:jobId" element={<Applicants />} />
-
-        <Route path="messaging" element={<Messaging />} />
-        <Route path="applied" element={<Applied />} />
-
-        {/* Catch-all: redirect unknown protected URLs to home */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Route>
-
-      {/* Catch-all for any non-auth routes: redirect to login */}
-      <Route path="*" element={<Navigate to="/login" replace />} />
-    </Routes>
   );
 }

@@ -1,15 +1,29 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Bell, Users, MessageCircle, Home as HomeIcon, Pencil } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { useUserProfile } from "@/context/UserProfileContext";
+import { useChat } from "@/context/ChatContext";
+import { useNotifications } from "@/context/notificationContext";
 import skillLogo from "../assets/skill.png";
+
+function Badge({ count }) {
+  if (count <= 0) return null;
+  return (
+    <span className="absolute top-0 right-0 mt-[-4px] mr-[-6px] bg-red-600 text-white text-xs rounded-full px-1.5 py-0.5 select-none">
+      {count > 99 ? "99+" : count}
+    </span>
+  );
+}
 
 export default function Header() {
   const [openUser, setOpenUser] = useState(false);
   const { user, logout } = useAuth();
   const { profile } = useUserProfile();
   const navigate = useNavigate();
+
+  const { unreadCount: messageUnread } = useChat();
+  const { unreadCount: notificationUnread } = useNotifications();
 
   const handleLogout = () => {
     logout();
@@ -18,8 +32,7 @@ export default function Header() {
   };
 
   return (
-   <header className="w-full px-8 py-4 flex items-center justify-between bg-white shadow">
-
+    <header className="w-full px-8 py-4 flex items-center justify-between bg-white shadow relative">
       {/* Logo */}
       <Link to="/" className="flex items-center gap-3 flex-shrink-0">
         <img src={skillLogo} alt="SkillConnect Logo" className="h-10" />
@@ -28,7 +41,7 @@ export default function Header() {
 
       {/* Navigation */}
       <nav className="flex items-center gap-8 flex-1 justify-center">
-        <Link to="/" className="flex items-center gap-1 text-gray-700 hover:text-blue-600">
+        <Link to="/" className="flex items-center gap-1 text-gray-700 hover:text-blue-600 relative">
           <HomeIcon size={24} />
           <span className="hidden sm:inline text-base font-medium">Home</span>
         </Link>
@@ -40,21 +53,23 @@ export default function Header() {
           <Pencil size={20} />
           <span className="hidden sm:inline text-base font-medium">Posts</span>
         </button>
-        <Link to="/connections" className="flex items-center gap-1 text-gray-700 hover:text-blue-600">
+        <Link to="/connections" className="flex items-center gap-1 text-gray-700 hover:text-blue-600 relative">
           <Users size={24} />
           <span className="hidden sm:inline text-base font-medium">Connections</span>
         </Link>
         <button
           onClick={() => navigate("/messaging")}
           aria-label="Messages"
-          className="flex items-center gap-1 text-gray-700 hover:text-blue-600"
+          className="flex items-center gap-1 text-gray-700 hover:text-blue-600 relative"
         >
           <MessageCircle size={24} />
           <span className="hidden sm:inline text-base font-medium">Messages</span>
+          <Badge count={messageUnread} />
         </button>
-        <Link to="/notifications" className="flex items-center gap-1 text-gray-700 hover:text-blue-600">
+        <Link to="/notifications" className="flex items-center gap-1 text-gray-700 hover:text-blue-600 relative">
           <Bell size={24} />
           <span className="hidden sm:inline text-base font-medium">Notifications</span>
+          <Badge count={notificationUnread} />
         </Link>
       </nav>
 
@@ -113,8 +128,7 @@ export default function Header() {
                   Upload Resume
                 </Link>
               </li>
-
-               <li>
+              <li>
                 <Link
                   to="/save"
                   className="block px-4 py-2 hover:bg-gray-100"
@@ -123,8 +137,6 @@ export default function Header() {
                   Saved
                 </Link>
               </li>
-
-
               <li>
                 <button
                   onClick={handleLogout}
@@ -140,3 +152,4 @@ export default function Header() {
     </header>
   );
 }
+

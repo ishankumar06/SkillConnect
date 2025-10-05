@@ -19,11 +19,20 @@ const iconMap = {
   Internships: Briefcase,
   Skills: Star,
 };
+import bgImage from '../assets/bgImage.png';
 
 
 function ConnectionItem({ name, title, avatarUrl }) {
   return (
-    <div className="flex justify-between items-center bg-white p-4 rounded-xl shadow mb-3 w-full">
+    <div className="flex justify-between items-center bg-white p-4 rounded-xl shadow mb-3 w-full
+    "
+    style={{
+            backgroundImage: `url(${bgImage})`,
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+          >
       <div className="flex items-center gap-4">
         {avatarUrl ? (
           <img
@@ -172,7 +181,14 @@ const displayedConnections = connectedProfiles.slice(0, 5);
   const bgImageUrl = useMemo(() => (isDataUri ? bgImage.trim() : bgImage ? `${bgImage}?${Date.now()}` : ""), [bgImage]);
 
   return (
-    <div className="flex min-h-screen bg-gray-100 p-0">
+    <div className="flex min-h-screen bg-gray-100 p-0"
+     style={{
+            backgroundImage: `url(${bgImage})`,
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+          >
       <input type="file" ref={fileInputRef} style={{ display: "none" }} onChange={onPhotoChange} accept="image/*" />
       <input type="file" ref={bgInputRef} style={{ display: "none" }} onChange={onChangeBg} accept="image/*" />
 
