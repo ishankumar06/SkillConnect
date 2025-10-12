@@ -1,7 +1,10 @@
 import React from "react";
 import { FileText, Info } from "lucide-react";
+import { useNavigate } from "react-router-dom"; // Import the hook
 
 export default function RightSidebar() {
+  const navigate = useNavigate(); // Initialize the hook
+
   return (
     <aside className="w-72 bg-white shadow-lg  p-4 flex flex-col gap-4">
       {/* Resume Builder Section */}
@@ -13,7 +16,10 @@ export default function RightSidebar() {
         <p className="text-sm text-gray-600 mb-3">
           Create and customize your professional resume easily.
         </p>
-        <button className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition">
+        <button
+          className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition"
+          onClick={() => navigate("/homeresume")} // Add navigation logic
+        >
           Build Resume
         </button>
       </div>
@@ -33,3 +39,4 @@ export default function RightSidebar() {
     </aside>
   );
 }
+

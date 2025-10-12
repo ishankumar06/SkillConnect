@@ -3,23 +3,22 @@
 @tailwind utilities;
 
 
-/* Webkit browsers (Chrome, Edge, Safari) */
 main::-webkit-scrollbar {
-  width: 8px; /* Scrollbar width */
+  width: 8px; 
 }
 
 main::-webkit-scrollbar-track {
-  background: transparent; /* Track background */
+  background: transparent;
 }
 
 main::-webkit-scrollbar-thumb {
-  background-color: white; /* Scroll thumb color: white */
+  background-color: white; 
   border-radius: 4px;
-  border: 2px solid transparent; /* Padding around thumb */
+  border: 2px solid transparent; 
   background-clip: content-box; 
 }
 
-/* Firefox */
+
 main {
   scrollbar-width: thin;
   scrollbar-color: white transparent;

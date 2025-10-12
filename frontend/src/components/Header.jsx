@@ -120,13 +120,13 @@ export default function Header() {
                 </Link>
               </li>
               <li>
-                <Link
+                {/* <Link
                   to="/upload-resume"
                   className="block px-4 py-2 hover:bg-gray-100"
                   onClick={() => setOpenUser(false)}
                 >
                   Upload Resume
-                </Link>
+                </Link> */}
               </li>
               <li>
                 <Link
