@@ -13,7 +13,7 @@ export default function JobSearch() {
 
   useEffect(() => {
     fetchJobs();
-  }, []); // eslint-disable-line
+  }, []); 
 
   useEffect(() => {
     setFilteredJobs(jobs);
@@ -53,7 +53,7 @@ export default function JobSearch() {
             backgroundPosition: 'center',
           }}
           >
-      <h2 className="text-2xl font-bold text-blue-800 mb-4">Search for Jobs</h2>
+      <h2 className="text-2xl font-bold text-black-800 mb-4">Search for Jobs</h2>
 
       <SearchBar onSearch={handleSearch} value={searchTerm} />
 
@@ -72,7 +72,7 @@ export default function JobSearch() {
             const authorName =
               authorUser?.fullName ||
               (typeof job.author === "string" ? job.author.trim() : "") ||
-              (job.company && job.company.trim()) || // fallback company name
+              (job.company && job.company.trim()) || 
               "Job by Someone";
               console.log("ishananananna",authorName);
               console.log("iiiddd",job._id,job.id);

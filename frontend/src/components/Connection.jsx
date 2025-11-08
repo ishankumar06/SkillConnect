@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { useUserProfile } from "../context/UserProfileContext";
 import { useUsers } from "../context/UsersContext";
 import bgImage from '../assets/bgImage.png';
+import { Link } from "react-router-dom";
 
-function ConnectionItem({ name, title, avatarUrl, onUnfollow }) {
+function ConnectionItem({ userId, name, title, avatarUrl, onUnfollow }) {
   const [showConfirm, setShowConfirm] = useState(false);
 
   // Confirm dialog handlers
@@ -15,33 +16,36 @@ function ConnectionItem({ name, title, avatarUrl, onUnfollow }) {
   };
 
   return (
-    <div className="flex justify-between items-center bg-white p-4 rounded-xl shadow-md mb-3 cursor-default w-full max-w-none relative">
-      <div className="flex items-center gap-4">
-        {avatarUrl ? (
-          <img
-            src={avatarUrl}
-            alt={`${name} avatar`}
-            className="w-14 h-14 rounded-full object-cover border-2 border-green-500"
-          />
-        ) : (
-          <div className="w-14 h-14 rounded-full bg-green-100 flex items-center justify-center text-green-600 font-bold text-lg">
-            {name?.charAt(0) || "?"}
+    <div className="flex justify-between items-center bg-white p-4 rounded-xl shadow mb-3 w-full relative">
+      <div className="flex items-center gap-4 flex-1 min-w-0">
+        <Link
+          to={`/profile/${userId}`}
+          className="flex items-center gap-4 flex-1 min-w-0 cursor-pointer"
+        >
+          {avatarUrl ? (
+            <img
+              src={avatarUrl}
+              alt={`${name} avatar`}
+              className="w-14 h-14 rounded-full object-cover border-2 border-green-500 flex-shrink-0"
+            />
+          ) : (
+            <div className="w-14 h-14 rounded-full bg-green-100 flex items-center justify-center text-green-600 font-bold text-lg flex-shrink-0">
+              {name?.charAt(0) || "?"}
+            </div>
+          )}
+          <div className="min-w-0">
+            <h4 className="font-semibold text-gray-900 text-lg truncate">{name}</h4>
+            <p className="text-gray-500 text-sm truncate">{title}</p>
           </div>
-        )}
-        <div>
-          <h4 className="font-semibold text-gray-900 text-lg">{name}</h4>
-          <p className="text-gray-500 text-sm">{title}</p>
-        </div>
+        </Link>
       </div>
 
       <button
         onClick={handleUnfollowClick}
-        className="
-          text-sm text-[#fafafa] uppercase px-3 py-1 rounded-lg border-2 border-[#fafafa] 
+        className="ml-auto self-center text-sm text-[#fafafa] uppercase px-3 py-1 rounded-lg border-2 border-[#fafafa] 
           bg-[#252525] shadow-[3px_3px_0_0_#fafafa] cursor-pointer
           active:shadow-none active:translate-x-[2px] active:translate-y-[2px]
-          transition whitespace-nowrap max-w-full
-        "
+          transition whitespace-nowrap max-w-full"
       >
         Followed
       </button>
@@ -96,13 +100,15 @@ export default function Connection() {
   };
 
   return (
-    <div className="w-full px-6 py-6 bg-gray-50 rounded-2xl shadow-md mt-6 min-h-screen"
-    style={{
+    <div
+      className="w-full px-6 py-6 bg-gray-50 rounded-2xl shadow-md mt-6 min-h-screen"
+      style={{
         backgroundImage: `url(${bgImage})`,
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-      }}>
+      }}
+    >
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Your Connected Profiles</h1>
         {/* Search input */}
@@ -119,6 +125,7 @@ export default function Connection() {
         filteredProfiles.map((user) => (
           <ConnectionItem
             key={user._id}
+            userId={user._id}
             name={user.fullName}
             title={user.role || user.title}
             avatarUrl={user.profilePic || user.avatarUrl}

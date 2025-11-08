@@ -17,7 +17,7 @@ export default function RightSidebar() {
           Create and customize your professional resume easily.
         </p>
         <button
-          className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition"
+          className="w-full bg-white text-yellow-600 border border-yellow-200 hover:bg-yellow-50 hover:border-yellow-500 rounded-xl shadow-sm px-4 transition"
           onClick={() => navigate("/homeresume")} // Add navigation logic
         >
           Build Resume

@@ -1,7 +1,6 @@
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useJob } from "../context/JobContext";
 
-// Utility: convert image file to base64 string for safe localStorage storage
 function fileToBase64(file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -11,26 +10,23 @@ function fileToBase64(file) {
   });
 }
 
+const icon = (
+  <span className="flex items-center justify-center w-12 h-12 rounded-xl shadow-sm">
+    <i className="fas fa-briefcase text-2xl text-gray-500" />
+  </span>
+);
+
 export default function PostSection() {
   const { addJob } = useJob();
 
   const [form, setForm] = useState({
-    author: "",
-    time: "",
-    title: "",
-    content: "",
-    address: "",
-    workType: "",
-    salary: "",
-    workingHour: "",
-    holiday: "",
-    image: "", // base64 string
+    author: "", time: "", title: "", content: "",
+    address: "", workType: "", salary: "", workingHour: "", holiday: "", image: "",
   });
 
   const [imagePreview, setImagePreview] = useState(null);
   const fileInputRef = useRef();
 
-  // Update image preview when image base64 string changes
   useEffect(() => {
     if (!form.image) {
       setImagePreview(null);
@@ -44,7 +40,6 @@ export default function PostSection() {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  // When user selects image file, convert to base64 and store in form.image
   const handleImageChange = async (e) => {
     if (e.target.files && e.target.files[0]) {
       const base64 = await fileToBase64(e.target.files[0]);
@@ -56,27 +51,16 @@ export default function PostSection() {
     fileInputRef.current.click();
   };
 
-  // Check if all required fields are filled correctly
   const isFormValid = () => {
-    const {
-      author,
-      title,
-      content,
-      address,
-      workType,
-      salary,
-      workingHour,
-      holiday,
-    } = form;
     return (
-      author.trim() !== "" &&
-      title.trim() !== "" &&
-      content.trim() !== "" &&
-      address.trim() !== "" &&
-      workType.trim() !== "" &&
-      salary.trim() !== "" &&
-      workingHour.trim() !== "" &&
-      holiday.trim() !== ""
+      form.author.trim() !== "" &&
+      form.title.trim() !== "" &&
+      form.content.trim() !== "" &&
+      form.address.trim() !== "" &&
+      form.workType.trim() !== "" &&
+      form.salary.trim() !== "" &&
+      form.workingHour.trim() !== "" &&
+      form.holiday.trim() !== ""
     );
   };
 
@@ -84,9 +68,7 @@ export default function PostSection() {
     e.preventDefault();
     if (!isFormValid()) return;
 
-    // Generate unique ID for new job post (timestamp string)
     const uniqueId = Date.now().toString();
-
     const newPost = {
       id: uniqueId,
       ...form,
@@ -96,30 +78,31 @@ export default function PostSection() {
       shares: 0,
       image: form.image,
     };
-    console.log(newPost);
 
     addJob(newPost);
 
-    // Reset form fields after post
     setForm({
-      author: "",
-      time: "",
-      title: "",
-      content: "",
-      address: "",
-      workType: "",
-      salary: "",
-      workingHour: "",
-      holiday: "",
-      image: "",
+      author: "", time: "", title: "", content: "",
+      address: "", workType: "", salary: "", workingHour: "", holiday: "", image: "",
     });
     setImagePreview(null);
   };
 
+  const fields = [
+    { name: "author", placeholder: "Author", required: true },
+    { name: "title", placeholder: "Job Title", required: true },
+    { name: "content", placeholder: "Job Description", as: "textarea", rows: 3, required: true },
+    { name: "address", placeholder: "Address", required: true },
+    { name: "workType", placeholder: "Work Type", required: true },
+    { name: "salary", placeholder: "Salary", required: true },
+    { name: "workingHour", placeholder: "Working Hours", required: true },
+    { name: "holiday", placeholder: "Holiday Info", required: true },
+  ];
+
   return (
     <form
       onSubmit={handlePost}
-      className="bg-white shadow-lg p-6 mb-8 max-w-4xl mx-auto rounded-lg"
+      className="max-w-3xl mx-auto p-6 space-y-6 rounded-2xl bg-white shadow-md"
       noValidate
     >
       <input
@@ -129,97 +112,53 @@ export default function PostSection() {
         accept="image/*"
         style={{ display: "none" }}
       />
+
       <button
         type="button"
         onClick={triggerImageUpload}
-        className="mb-4 px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
+        className="flex items-center gap-3 rounded-lg px-4 py-2 text-blue-600 font-semibold hover:bg-blue-50 transition"
       >
+        <i className="fas fa-upload text-lg" />
         Upload Image
       </button>
 
       {imagePreview && (
-        <div className="mb-4 w-48 h-48 border rounded-lg overflow-hidden mx-auto">
-          <img
-            src={imagePreview}
-            alt="Selected"
-            className="object-cover w-full h-full"
-          />
+        <div className="w-48 h-48 rounded-lg overflow-hidden border border-gray-200 mx-auto">
+          <img src={imagePreview} alt="Selected" className="object-cover w-full h-full" />
         </div>
       )}
 
-      <input
-        name="author"
-        value={form.author}
-        onChange={handleChange}
-        placeholder="Author"
-        className="mb-3 w-full border border-gray-300 rounded-md p-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-        required
-      />
-      <input
-        name="title"
-        value={form.title}
-        onChange={handleChange}
-        placeholder="Job Title"
-        className="mb-3 w-full border border-gray-300 rounded-md p-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-        required
-      />
-      <textarea
-        name="content"
-        value={form.content}
-        onChange={handleChange}
-        placeholder="Job Description"
-        rows={4}
-        className="mb-3 w-full border border-gray-300 rounded-md p-3 text-gray-900 placeholder-gray-400 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-        required
-      />
-      <input
-        name="address"
-        value={form.address}
-        onChange={handleChange}
-        placeholder="Address"
-        className="mb-3 w-full border border-gray-300 rounded-md p-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-        required
-      />
-      <input
-        name="workType"
-        value={form.workType}
-        onChange={handleChange}
-        placeholder="Work Type"
-        className="mb-3 w-full border border-gray-300 rounded-md p-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-        required
-      />
-      <input
-        name="salary"
-        value={form.salary}
-        onChange={handleChange}
-        placeholder="Salary"
-        className="mb-3 w-full border border-gray-300 rounded-md p-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-        required
-      />
-      <input
-        name="workingHour"
-        value={form.workingHour}
-        onChange={handleChange}
-        placeholder="Working Hours"
-        className="mb-3 w-full border border-gray-300 rounded-md p-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-        required
-      />
-      <input
-        name="holiday"
-        value={form.holiday}
-        onChange={handleChange}
-        placeholder="Holiday Info"
-        className="mb-6 w-full border border-gray-300 rounded-md p-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-        required
-      />
+      {fields.map((field) => {
+        const Component = field.as === "textarea" ? "textarea" : "input";
+        return (
+          <div key={field.name} className="flex gap-4 items-center">
+            {icon}
+            <label className="flex-1 block">
+              <span className="text-gray-900 font-semibold">
+                {field.placeholder}
+                {field.required && <span className="text-red-600 ml-1">*</span>}
+              </span>
+              <Component
+                name={field.name}
+                value={form[field.name]}
+                onChange={handleChange}
+                placeholder={field.placeholder}
+                rows={field.rows}
+                className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 resize-none outline-none text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 transition"
+                required={field.required}
+              />
+            </label>
+          </div>
+        );
+      })}
 
       <button
         type="submit"
         disabled={!isFormValid()}
-        className={`w-full py-3 rounded-lg text-white font-semibold transition ${
+        className={`w-full py-3 rounded-2xl font-bold transition ${
           isFormValid()
-            ? "bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300"
-            : "bg-gray-400 cursor-not-allowed"
+            ? "bg-blue-600 text-white hover:bg-blue-700 focus:ring-4 focus:ring-blue-300"
+            : "bg-gray-400 text-gray-200 cursor-not-allowed"
         }`}
       >
         Post Job

@@ -125,17 +125,21 @@ updateProfile({ connections: updatedConnections });
                   key={user._id}
                   className="flex items-center justify-between gap-3 w-full"
                 >
-                  <div className="flex items-center gap-3 cursor-pointer flex-grow min-w-0">
-                    <img
-                      src={user.profilePic || user.avatarUrl}
-                      alt={user.fullName}
-                      className="w-10 h-10 rounded-full object-cover flex-shrink-0"
-                    />
-                    <div className="truncate">
-                      <p className="font-medium text-gray-800 text-sm truncate">{user.fullName}</p>
-                      <p className="text-xs text-gray-500 truncate">{user.role || user.title}</p>
-                    </div>
-                  </div>
+                  <Link
+  to={`/profile/${user._id}`}
+  className="flex items-center gap-3 cursor-pointer flex-grow min-w-0 hover:bg-gray-100 p-1 rounded-lg transition"
+>
+  <img
+    src={user.profilePic || user.avatarUrl}
+    alt={user.fullName}
+    className="w-10 h-10 rounded-full object-cover flex-shrink-0"
+  />
+  <div className="truncate">
+    <p className="font-medium text-gray-800 text-sm truncate">{user.fullName}</p>
+    <p className="text-xs text-gray-500 truncate">{user.role || user.title}</p>
+  </div>
+</Link>
+
 
                   <button
                     type="button"

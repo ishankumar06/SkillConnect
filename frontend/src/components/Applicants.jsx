@@ -151,29 +151,36 @@ export default function Applicants() {
     );
   }
 
-  return (
+   return (
     <div className="max-w-4xl mx-auto p-6">
       <h2 className="text-3xl font-bold mb-6">Applicants for Job ID: {jobId}</h2>
+
       {jobApplicants.length === 0 ? (
-        <p>No applicants yet.</p>
+        <p className="text-gray-600 italic">No applicants yet.</p>
       ) : (
-        <ul className="space-y-4">
+        <ul className="space-y-6">
           {jobApplicants.map((applicant) => {
             const isCurrentUser = applicant.id === currentUserId;
             return (
               <li
                 key={applicant.applicationId}
-                className={`border p-4 rounded shadow ${isCurrentUser ? "border-blue-600 bg-blue-50" : ""}`}
+                className={`border p-6 rounded-2xl shadow-md bg-white transition ${
+                  isCurrentUser ? "border-blue-600 bg-blue-50" : "border-gray-200"
+                }`}
               >
-                <h3 className="font-semibold text-xl">
+                <h3 className="font-semibold text-xl text-gray-900">
                   {applicant.fullName}
-                  {isCurrentUser && <span className="ml-2 text-sm text-blue-700">(You)</span>}
+                  {isCurrentUser && (
+                    <span className="ml-3 px-2 py-1 text-sm bg-blue-200 text-blue-800 rounded-full">
+                      You
+                    </span>
+                  )}
                 </h3>
-                <p>
+                <p className="mt-2 text-gray-700">
                   <strong>Skills:</strong>{" "}
                   {Array.isArray(applicant.skills) ? applicant.skills.join(", ") : applicant.skills}
                 </p>
-                <p>
+                <p className="mt-1 text-gray-700">
                   <strong>About:</strong> {applicant.about}
                 </p>
                 {applicant.resumeUrl ? (
@@ -181,12 +188,12 @@ export default function Applicants() {
                     href={applicant.resumeUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-600 hover:underline"
+                    className="mt-3 inline-block text-blue-600 hover:underline font-semibold"
                   >
                     View Resume
                   </a>
                 ) : (
-                  <p className="text-gray-500 italic">Resume not provided</p>
+                  <p className="mt-3 text-gray-400 italic">Resume not provided</p>
                 )}
               </li>
             );

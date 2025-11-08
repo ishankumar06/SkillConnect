@@ -9,58 +9,52 @@ import skillLogo from "../assets/skill.png";
 
 export default function PostCard({ post }) {
   const {
-  _id: rawId,
-  id,
-  authorId,
-  author = {},
-  time,
-  title,
-  content = "",
-  description = "",
-  profilePic: postProfilePic,
-  address,
-  workType,
-  salary,
-  jobImage = "",
-  workingHour,
-  holiday,
-} = post || {};
+    _id: rawId,
+    id,
+    authorId,
+    author = {},
+    time,
+    title,
+    content = "",
+    description = "",
+    profilePic: postProfilePic,
+    address,
+    workType,
+    salary,
+    jobImage = "",
+    workingHour,
+    holiday,
+  } = post || {};
 
-const _id = rawId || id;
+  const _id = rawId || id;
+  const navigate = useNavigate();
+  const { profile, updateProfile } = useUserProfile();
+  const { addSavedPost, savedPosts } = useSavedPosts();
+  const { userId: loggedInUserId } = useAuth();
 
-console.log("id",_id);
   const hasValidString = (str) => typeof str === "string" && str.trim().length > 0;
 
-  // Resolve job description with safe fallbacks
-  const jobDescription = hasValidString(content)
-    ? content
-    : hasValidString(description)
-    ? description
-    : hasValidString(author.description)
-    ? author.description
-    : hasValidString(author.content)
-    ? author.content
-    : "No description available.";
+  const jobDescription =
+    hasValidString(content)
+      ? content
+      : hasValidString(description)
+      ? description
+      : hasValidString(author.description)
+      ? author.description
+      : hasValidString(author.content)
+      ? author.content
+      : "No description available.";
 
-  // Resolve job image with fallback
   const finalJobImage = hasValidString(jobImage)
     ? jobImage
     : hasValidString(author.jobImage)
     ? author.jobImage
     : "";
 
-  // Resolve display author name (string or object)
   const displayAuthor =
     typeof author === "string" ? author : author?.fullName || "Unknown Company";
 
-  // Resolve profile pic with fallbacks
-  const displayProfilePic =
-    postProfilePic || author.profilePic || skillLogo;
-
-  const { profile, updateProfile } = useUserProfile();
-  const { addSavedPost, savedPosts } = useSavedPosts();
-  const navigate = useNavigate();
-  const { userId: loggedInUserId } = useAuth();
+  const displayProfilePic = postProfilePic || author.profilePic || skillLogo;
 
   const isAlreadySaved = savedPosts.some(
     (sp) => sp.postId && sp.postId._id === _id
@@ -71,8 +65,8 @@ console.log("id",_id);
   );
   const [isInterested, setIsInterested] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
-  // Reset interest state if _id changes or component remounts
   useEffect(() => {
     setIsInterested(false);
   }, [_id]);
@@ -113,33 +107,23 @@ console.log("id",_id);
     }
   };
 
-  // Navigate immediately and set interest; can extend with backend API later
- const [isRedirecting, setIsRedirecting] = useState(false);
+  const onInterestedClick = () => {
+    setIsInterested(true);
+    setIsRedirecting(true);
 
-const onInterestedClick = () => {
-  console.log("Interested button clicked");
-  setIsInterested(true);
-  setIsRedirecting(true);
-
-  setTimeout(() => {
-     console.log("Navigating to apply with id:", _id);
-    if (_id) {
-      console.log("Navigating to apply page with id:", _id);
-      navigate(`/apply/${_id}`);
-    } else {
-      navigate("/apply");
-    }
-  }, 500);
-};
-
-
+    setTimeout(() => {
+      if (_id) {
+        navigate(`/apply/${_id}`);
+      } else {
+        navigate("/apply");
+      }
+    }, 500);
+  };
 
   const onSaveClick = async () => {
     if (!isAlreadySaved) {
       await addSavedPost(post);
       navigate("/save");
-    } else {
-      // Optional: notify user post is already saved
     }
   };
 
@@ -147,7 +131,6 @@ const onInterestedClick = () => {
     ? "bg-green-600 text-white border-green-600"
     : "bg-transparent text-gray-700 border-gray-400 hover:bg-gray-100";
 
-  // Image fallback logic with backend URL prefix if needed
   let imageSrc = finalJobImage;
   if (!hasValidString(imageSrc)) {
     imageSrc =
@@ -162,17 +145,30 @@ const onInterestedClick = () => {
 
   const disableFollow = !authorId || String(authorId) === String(loggedInUserId);
 
+  // ✅ NEW — navigate to author's profile
+  const goToProfile = () => {
+    if (!authorId) return;
+    if (String(authorId) === String(loggedInUserId)) {
+      navigate("/profile");
+    } else {
+      navigate(`/profile/${authorId}`);
+    }
+  };
+
   return (
     <div className="relative bg-white shadow-md rounded-2xl p-6 max-w-4xl mx-auto flex flex-col gap-4 min-h-[550px]">
       <div className="flex justify-between items-start">
-        <div className="flex items-center gap-4">
+        <div
+          className="flex items-center gap-4 cursor-pointer"
+          onClick={goToProfile} // ✅ Clickable avatar & name
+        >
           <img
             src={displayProfilePic}
             alt={`${displayAuthor} profile`}
-            className="w-16 h-16 rounded-full object-cover"
+            className="w-16 h-16 rounded-full object-cover border"
           />
           <div>
-            <h3 className="font-semibold text-lg flex items-center gap-2">
+            <h3 className="font-semibold text-lg flex items-center gap-2 hover:underline">
               {displayAuthor}
               <span className="text-gray-600 text-sm font-normal">
                 {workType || "Full Time"}
@@ -210,7 +206,7 @@ const onInterestedClick = () => {
 
       <div className="flex justify-between text-gray-800 text-sm font-medium mb-4">
         <p>
-          <strong>Salary:</strong> {salary || "₹40,000/month"}
+          <strong>Salary:</strong> {salary || "N/A"}
         </p>
         <p>
           <strong>Address:</strong> {address || "N/A"}
