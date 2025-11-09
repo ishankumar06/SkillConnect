@@ -2,7 +2,6 @@ import React, { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getResumeById } from "../api/ResumeApi";
 import Loading from "./Loading";
-
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
 
@@ -17,7 +16,6 @@ function Resume() {
 
   const resumeId = location.state?._id;
 
-  // Fetch resume by ID from API or use passed state
   useEffect(() => {
     if (resumeId) {
       setLoading(true);
@@ -33,20 +31,26 @@ function Resume() {
     }
   }, [resumeId, location.state]);
 
-  // Generate and download PDF of the resume content
+  // Log customFields for debugging
+  useEffect(() => {
+    if (resumeData) {
+      console.log("Full Resume Data:", resumeData);
+
+      console.log("Custom Fields in Resume Data:", resumeData.customFields);
+    }
+  }, [resumeData]);
+
   const handleDownloadPDF = async () => {
-    const input = componentRef.current;
-    if (!input) {
-      console.error("Element reference is missing. Cannot capture image.");
+    if (!componentRef.current) {
+      console.error("Element reference missing for PDF capture.");
       return;
     }
 
+    const input = componentRef.current;
     const originalWidth = input.offsetWidth;
     const originalHeight = input.offsetHeight;
 
     try {
-      console.log("Starting PDF generation...");
-
       const canvas = await html2canvas(input, {
         scale: 3,
         windowWidth: originalWidth,
@@ -69,26 +73,19 @@ function Resume() {
         pdf.addImage(imgData, "JPEG", 0, position, pdfWidth, imgHeight);
         heightLeft -= pdfHeight;
         position -= pdfHeight;
-
-        if (heightLeft > 0) {
-          pdf.addPage();
-        }
+        if (heightLeft > 0) pdf.addPage();
       }
 
       const filename = `${resumeData?.basicInfo?.name || "Resume"}_${new Date()
         .toLocaleDateString()
         .replace(/\//g, "-")}.pdf`;
-
       pdf.save(filename);
-
-      console.log("PDF generated successfully.");
     } catch (err) {
       console.error("Failed to generate PDF:", err);
       alert("Failed to generate PDF. Please check the console for details.");
     }
   };
 
-  // Early returns for loading / error states
   if (loading) return <Loading />;
 
   if (error || !resumeData)
@@ -106,7 +103,6 @@ function Resume() {
       </div>
     );
 
-  // Destructure data with defaults
   const {
     basicInfo: {
       name = "Your Name",
@@ -117,6 +113,7 @@ function Resume() {
     experience = [],
     education = [],
     skills = [],
+    customFields = [],
   } = resumeData;
 
   return (
@@ -126,24 +123,24 @@ function Resume() {
         className="bg-white rounded shadow-lg w-full max-w-4xl p-8 md:p-10"
         style={{ maxWidth: "793px" }}
       >
-        {/* Resume Preview Content */}
-        <h1 className="text-3xl font-bold mb-4 text-center">Resume Preview</h1>
+       <div className="text-center mb-8">
+  <h3 className="text-xl font-bold mb-2">{name}</h3>
+  <p className="text-base text-gray-700">{email}</p>
+  <p className="text-base text-gray-700">{phone}</p>
+</div>
 
+
+        {/* Personal Details */}
         <section className="mb-6">
           <h2 className="text-xl font-semibold border-b border-gray-300 pb-2 mb-3">
             Personal Details
           </h2>
-          <p>
-            <strong>Name:</strong> {name}
-          </p>
-          <p>
-            <strong>Email:</strong> {email}
-          </p>
-          <p>
-            <strong>Phone:</strong> {phone}
-          </p>
+          <p><strong>Name:</strong> {name}</p>
+          <p><strong>Email:</strong> {email}</p>
+          <p><strong>Phone:</strong> {phone}</p>
         </section>
 
+        {/* Professional Summary */}
         {summary && (
           <section className="mb-6">
             <h2 className="text-xl font-semibold border-b border-gray-300 pb-2 mb-3">
@@ -153,6 +150,7 @@ function Resume() {
           </section>
         )}
 
+        {/* Work Experience */}
         <section className="mb-6">
           <h2 className="text-xl font-semibold border-b border-gray-300 pb-2 mb-3">
             Work Experience
@@ -160,24 +158,18 @@ function Resume() {
           {experience.length === 0 && <p>No work experience added.</p>}
           {experience.map((exp, i) => (
             <div key={i} className="mb-4">
+              <p><strong>Company:</strong> {exp.company || "-"}</p>
+              <p><strong>Role:</strong> {exp.role || "-"}</p>
               <p>
-                <strong>Company:</strong> {exp.company || "-"}
-              </p>
-              <p>
-                <strong>Role:</strong> {exp.role || "-"}
-              </p>
-              <p>
-                <strong>Duration:</strong> {exp.startDate || "-"} to{" "}
-                {exp.endDate || "Present"}
+                <strong>Duration:</strong> {exp.startDate || "-"} to {exp.endDate || "Present"}
               </p>
               {exp.description && <p>{exp.description}</p>}
-              {i !== experience.length - 1 && (
-                <hr className="mt-3 border-gray-300" />
-              )}
+              {i !== experience.length - 1 && <hr className="mt-3 border-gray-300" />}
             </div>
           ))}
         </section>
 
+        {/* Education */}
         <section className="mb-6">
           <h2 className="text-xl font-semibold border-b border-gray-300 pb-2 mb-3">
             Education
@@ -185,23 +177,17 @@ function Resume() {
           {education.length === 0 && <p>No education added.</p>}
           {education.map((edu, i) => (
             <div key={i} className="mb-4">
+              <p><strong>Institution:</strong> {edu.institution || "-"}</p>
+              <p><strong>Degree:</strong> {edu.degree || "-"}</p>
               <p>
-                <strong>Institution:</strong> {edu.institution || "-"}
+                <strong>Duration:</strong> {edu.startDate || "-"} to {edu.endDate || "Present"}
               </p>
-              <p>
-                <strong>Degree:</strong> {edu.degree || "-"}
-              </p>
-              <p>
-                <strong>Duration:</strong> {edu.startDate || "-"} to{" "}
-                {edu.endDate || "Present"}
-              </p>
-              {i !== education.length - 1 && (
-                <hr className="mt-3 border-gray-300" />
-              )}
+              {i !== education.length - 1 && <hr className="mt-3 border-gray-300" />}
             </div>
           ))}
         </section>
 
+        {/* Skills */}
         <section className="mb-6">
           <h2 className="text-xl font-semibold border-b border-gray-300 pb-2 mb-3">
             Skills
@@ -220,6 +206,24 @@ function Resume() {
             </ul>
           )}
         </section>
+
+        {/* Custom Fields */}
+        {customFields.length > 0 && (
+          <section className="mb-6">
+            <h2 className="text-xl font-semibold border-b border-gray-300 pb-2 mb-4">
+              Additional Information
+            </h2>
+            {customFields
+              .filter(field => (field.title?.trim() || field.content?.trim()))
+              .map((field, i, arr) => (
+                <div key={i} className="mb-4 last:mb-0">
+                  <h3 className="text-lg font-semibold">{field.title || "Custom Section"}</h3>
+                  <p>{field.content || "-"}</p>
+                  {i !== arr.length - 1 && <hr className="mt-3 border-gray-300" />}
+                </div>
+              ))}
+          </section>
+        )}
       </div>
 
       {/* Action Buttons */}
@@ -227,12 +231,11 @@ function Resume() {
         <button
           disabled={!resumeData || !componentRef.current}
           className={`bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded transition flex items-center ${
-            !resumeData || !componentRef.current
-              ? "opacity-50 cursor-not-allowed"
-              : ""
+            !resumeData || !componentRef.current ? "opacity-50 cursor-not-allowed" : ""
           }`}
           onClick={handleDownloadPDF}
         >
+          {/* SVG icon for download */}
           <svg
             className="w-5 h-5 mr-2"
             fill="none"
@@ -260,5 +263,6 @@ function Resume() {
     </div>
   );
 }
+
 
 export default Resume;

@@ -9,118 +9,307 @@ const icon = (
   </span>
 );
 
-export default function Home() {
+export default function ResumeBuilder() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [summary, setSummary] = useState("");
+  const [skills, setSkills] = useState("");
+
+  // Dynamic sections
   const [experiences, setExperiences] = useState([
     { company: "", role: "", startDate: "", endDate: "", description: "" },
   ]);
   const [educations, setEducations] = useState([
     { institution: "", degree: "", startDate: "", endDate: "" },
   ]);
-  const [skills, setSkills] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [customFields, setCustomFields] = useState([]);
 
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const isFormValid = () => name.trim() !== "" && email.trim() !== "";
+
+  const handleAddExperience = () =>
+    setExperiences([
+      ...experiences,
+      { company: "", role: "", startDate: "", endDate: "", description: "" },
+    ]);
+
+  const handleAddEducation = () =>
+    setEducations([
+      ...educations,
+      { institution: "", degree: "", startDate: "", endDate: "" },
+    ]);
+
+  const handleAddCustomField = () =>
+    setCustomFields([...customFields, { title: "", content: "" }]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!isFormValid()) {
+      alert("Please fill Name and Email");
+      return;
+    }
+    setLoading(true);
+    try {
+      const resumeData = {
+        basicInfo: { name, email, phone },
+        summary,
+        experience: experiences,
+        education: educations,
+        skills: skills
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean),
+        customFields,
+      };
+      const savedResume = await createResume(resumeData);
+      console.log("Saved Resume (after create):", savedResume);
+      navigate("/resume", { state: savedResume });
+    } catch {
+      alert("Failed to save resume. Try again.");
+    }
+    setLoading(false);
+  };
 
   if (loading) return <Loading />;
 
   return (
     <form
-      onSubmit={async (e) => {
-        e.preventDefault();
-        if (!isFormValid()) {
-          alert("Please fill Name and Email");
-          return;
-        }
-        setLoading(true);
-        try {
-          const resumeData = {
-            basicInfo: { name, email, phone },
-            summary,
-            experience: experiences,
-            education: educations,
-            skills: skills.split(",").map((s) => s.trim()).filter(Boolean),
-          };
-          const savedResume = await createResume(resumeData);
-          navigate("/resume", { state: savedResume });
-        } catch {
-          alert("Failed to save resume. Try again.");
-        }
-        setLoading(false);
-      }}
-      className="max-w-4xl mx-auto space-y-8 p-6 rounded-2xl bg-white shadow-lg"
-      aria-label="Resume Builder Form"
+      onSubmit={handleSubmit}
+      className="max-w-4xl mx-auto space-y-10 p-8 bg-white rounded-2xl shadow-xl"
     >
-      <h1 className="text-3xl font-bold text-center mb-6">Resume Builder</h1>
+      <h1 className="text-3xl font-bold text-center mb-6">
+         Resume Builder
+      </h1>
 
-      {/* Basic Info */}
-      {[
-        { id: "name", label: "Full Name", value: name, setter: setName, required: true },
-        { id: "email", label: "Email", value: email, setter: setEmail, required: true, type: "email" },
+      {/* Basic Info Section */}
+      {[ 
+        { id: "name", label: "Full Name", value: name, setter: setName },
+        { id: "email", label: "Email", value: email, setter: setEmail },
         { id: "phone", label: "Phone", value: phone, setter: setPhone },
-      ].map(({ id, label, value, setter, required, type = "text" }) => (
-        <div key={id} className="flex gap-4 items-center bg-gray-50 p-4 rounded-xl shadow">
+      ].map(({ id, label, value, setter }) => (
+        <div
+          key={id}
+          className="flex items-center gap-4 bg-gray-50 p-5 rounded-xl shadow-sm"
+        >
           {icon}
-          <label htmlFor={id} className="flex-1 block text-gray-700 font-semibold">
-            {label}
-            {required && <span className="text-red-600 ml-1">*</span>}
+          <label className="flex-1">
+            <span className="font-semibold text-gray-700">{label}</span>
             <input
               id={id}
-              required={required}
-              type={type}
-              placeholder={`Enter your ${label.toLowerCase()}`}
+              required={label !== "Phone"}
               value={value}
               onChange={(e) => setter(e.target.value)}
-              className="mt-1 w-full border border-gray-300 rounded-md p-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+              placeholder={`Enter your ${label.toLowerCase()}`}
+              className="mt-1 w-full border border-gray-300 rounded-md p-2 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </label>
         </div>
       ))}
 
-      {/* Professional Summary */}
-      <div className="flex gap-4 items-start bg-gray-50 p-4 rounded-xl shadow">
-        {icon}
-        <label htmlFor="summary" className="flex-1 block text-gray-700 font-semibold">
-          Professional Summary
-          <textarea
-            id="summary"
-            placeholder="Briefly describe your professional background"
-            value={summary}
-            onChange={(e) => setSummary(e.target.value)}
-            rows={3}
-            className="mt-1 w-full resize-none border border-gray-300 rounded-md p-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-          />
-        </label>
+      {/* Summary */}
+      <div className="bg-gray-50 p-5 rounded-xl shadow-sm">
+        <h2 className="font-semibold text-gray-700 mb-2">Professional Summary</h2>
+        <textarea
+          value={summary}
+          onChange={(e) => setSummary(e.target.value)}
+          rows={4}
+          placeholder="Briefly describe your professional background"
+          className="w-full border border-gray-300 rounded-md p-2 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
       </div>
 
-      {/* Experience and Education sections could be similarly wrapped in styled cards */}
+      {/* Work Experience */}
+      <div className="bg-gray-50 p-6 rounded-xl shadow-md">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="font-bold text-xl text-gray-800"> Work Experience</h2>
+          <button
+            type="button"
+            onClick={handleAddExperience}
+            className="text-blue-600 font-semibold hover:underline"
+          >
+            + Add Experience
+          </button>
+        </div>
+        {experiences.map((exp, i) => (
+          <div key={i} className="border-l-4 border-blue-400 pl-4 mb-4">
+            <input
+              placeholder="Company"
+              value={exp.company}
+              onChange={(e) => {
+                const newExp = [...experiences];
+                newExp[i].company = e.target.value;
+                setExperiences(newExp);
+              }}
+              className="block w-full mb-2 border p-2 rounded-md text-gray-800"
+            />
+            <input
+              placeholder="Role"
+              value={exp.role}
+              onChange={(e) => {
+                const newExp = [...experiences];
+                newExp[i].role = e.target.value;
+                setExperiences(newExp);
+              }}
+              className="block w-full mb-2 border p-2 rounded-md text-gray-800"
+            />
+            <div className="flex gap-2 mb-2">
+              <input
+                type="date"
+                value={exp.startDate}
+                onChange={(e) => {
+                  const newExp = [...experiences];
+                  newExp[i].startDate = e.target.value;
+                  setExperiences(newExp);
+                }}
+                className="w-1/2 border p-2 rounded-md text-gray-800"
+              />
+              <input
+                type="date"
+                value={exp.endDate}
+                onChange={(e) => {
+                  const newExp = [...experiences];
+                  newExp[i].endDate = e.target.value;
+                  setExperiences(newExp);
+                }}
+                className="w-1/2 border p-2 rounded-md text-gray-800"
+              />
+            </div>
+            <textarea
+              placeholder="Description"
+              value={exp.description}
+              onChange={(e) => {
+                const newExp = [...experiences];
+                newExp[i].description = e.target.value;
+                setExperiences(newExp);
+              }}
+              rows={2}
+              className="w-full border p-2 rounded-md text-gray-800"
+            />
+          </div>
+        ))}
+      </div>
+
+      {/* Education */}
+      <div className="bg-gray-50 p-6 rounded-xl shadow-md">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="font-bold text-xl text-gray-800"> Education</h2>
+          <button
+            type="button"
+            onClick={handleAddEducation}
+            className="text-blue-600 font-semibold hover:underline"
+          >
+            + Add Education
+          </button>
+        </div>
+        {educations.map((edu, i) => (
+          <div key={i} className="border-l-4 border-green-400 pl-4 mb-4">
+            <input
+              placeholder="Institution"
+              value={edu.institution}
+              onChange={(e) => {
+                const newEdu = [...educations];
+                newEdu[i].institution = e.target.value;
+                setEducations(newEdu);
+              }}
+              className="block w-full mb-2 border p-2 rounded-md text-gray-800"
+            />
+            <input
+              placeholder="Degree / Field"
+              value={edu.degree}
+              onChange={(e) => {
+                const newEdu = [...educations];
+                newEdu[i].degree = e.target.value;
+                setEducations(newEdu);
+              }}
+              className="block w-full mb-2 border p-2 rounded-md text-gray-800"
+            />
+            <div className="flex gap-2">
+              <input
+                type="date"
+                value={edu.startDate}
+                onChange={(e) => {
+                  const newEdu = [...educations];
+                  newEdu[i].startDate = e.target.value;
+                  setEducations(newEdu);
+                }}
+                className="w-1/2 border p-2 rounded-md text-gray-800"
+              />
+              <input
+                type="date"
+                value={edu.endDate}
+                onChange={(e) => {
+                  const newEdu = [...educations];
+                  newEdu[i].endDate = e.target.value;
+                  setEducations(newEdu);
+                }}
+                className="w-1/2 border p-2 rounded-md text-gray-800"
+              />
+            </div>
+          </div>
+        ))}
+      </div>
 
       {/* Skills */}
-      <div className="flex gap-4 items-center bg-gray-50 p-4 rounded-xl shadow">
-        {icon}
-        <label htmlFor="skills" className="flex-1 block text-gray-700 font-semibold">
-          Skills (comma separated)
-          <input
-            id="skills"
-            placeholder="e.g. React, Node.js, Leadership"
-            value={skills}
-            onChange={(e) => setSkills(e.target.value)}
-            className="mt-1 w-full border border-gray-300 rounded-md p-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-          />
-        </label>
+      <div className="bg-gray-50 p-5 rounded-xl shadow-md">
+        <h2 className="font-bold text-xl text-gray-800 mb-2"> Skills</h2>
+        <input
+          value={skills}
+          onChange={(e) => setSkills(e.target.value)}
+          placeholder="e.g. React, Node.js, Leadership"
+          className="w-full border p-2 rounded-md text-gray-800"
+        />
       </div>
 
+      {/* Custom Fields */}
+      <div className="bg-gray-50 p-6 rounded-xl shadow-md">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="font-bold text-xl text-gray-800"> Custom Fields</h2>
+          <button
+            type="button"
+            onClick={handleAddCustomField}
+            className="text-blue-600 font-semibold hover:underline"
+          >
+            + Add Field
+          </button>
+        </div>
+        {customFields.map((field, i) => (
+          <div key={i} className="border-l-4 border-purple-400 pl-4 mb-4">
+            <input
+              placeholder="Section Title (e.g. Projects)"
+              value={field.title}
+              onChange={(e) => {
+                const newFields = [...customFields];
+                newFields[i].title = e.target.value;
+                setCustomFields(newFields);
+              }}
+              className="block w-full mb-2 border p-2 rounded-md text-gray-800"
+            />
+            <textarea
+              placeholder="Content / Description"
+              value={field.content}
+              onChange={(e) => {
+                const newFields = [...customFields];
+                newFields[i].content = e.target.value;
+                setCustomFields(newFields);
+              }}
+              rows={2}
+              className="w-full border p-2 rounded-md text-gray-800"
+            />
+          </div>
+        ))}
+      </div>
+
+      {/* Submit */}
       <button
         type="submit"
         disabled={!isFormValid()}
-        className={`w-full bg-white text-yellow-600 border border-yellow-200 hover:bg-yellow-50 hover:border-yellow-500 rounded-xl shadow-sm px-4 transition ${
-          isFormValid() ? " bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300" : "bg-gray-400 cursor-not-allowed"
-        }`}
+        className={`w-full py-3 text-lg font-semibold rounded-xl shadow-md transition 
+          ${isFormValid()
+            ? "bg-blue-600 text-white hover:bg-blue-700"
+            : "bg-gray-400 text-gray-200 cursor-not-allowed"}`}
       >
         Generate Resume
       </button>

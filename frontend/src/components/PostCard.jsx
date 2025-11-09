@@ -127,6 +127,31 @@ export default function PostCard({ post }) {
     }
   };
 
+  const handleShare = async () => {
+  const shareData = {
+    title: title || "Job Opportunity",
+    text: `Check out this job: ${title || "Great opportunity!"} at ${displayAuthor}`,
+    url: `${window.location.origin}/job/${_id}`,
+  };
+
+  if (navigator.share) {
+    try {
+      await navigator.share(shareData);
+      console.log("Job shared successfully!");
+    } catch (err) {
+      console.error("Error sharing:", err);
+    }
+  } else {
+    try {
+      await navigator.clipboard.writeText(shareData.url);
+      alert("🔗 Job link copied to clipboard!");
+    } catch (err) {
+      console.error("Clipboard error:", err);
+    }
+  }
+};
+
+
   const followButtonClass = isFollowing
     ? "bg-green-600 text-white border-green-600"
     : "bg-transparent text-gray-700 border-gray-400 hover:bg-gray-100";
@@ -145,7 +170,6 @@ export default function PostCard({ post }) {
 
   const disableFollow = !authorId || String(authorId) === String(loggedInUserId);
 
-  // ✅ NEW — navigate to author's profile
   const goToProfile = () => {
     if (!authorId) return;
     if (String(authorId) === String(loggedInUserId)) {
@@ -160,7 +184,7 @@ export default function PostCard({ post }) {
       <div className="flex justify-between items-start">
         <div
           className="flex items-center gap-4 cursor-pointer"
-          onClick={goToProfile} // ✅ Clickable avatar & name
+          onClick={goToProfile}
         >
           <img
             src={displayProfilePic}
@@ -169,7 +193,7 @@ export default function PostCard({ post }) {
           />
           <div>
             <h3 className="font-semibold text-lg flex items-center gap-2 hover:underline">
-              {displayAuthor}
+              {displayAuthor.fullName || displayAuthor}
               <span className="text-gray-600 text-sm font-normal">
                 {workType || "Full Time"}
               </span>
@@ -180,12 +204,13 @@ export default function PostCard({ post }) {
 
         <div className="flex items-center gap-3">
           <button
-            onClick={() => alert("Share clicked")}
-            aria-label="Share post"
-            className="text-gray-500 hover:text-blue-600 transition"
-          >
-            <Share2 size={24} />
-          </button>
+  onClick={handleShare}
+  aria-label="Share post"
+  className="text-gray-500 hover:text-blue-600 transition"
+>
+  <Share2 size={24} />
+</button>
+
 
           <button
             onClick={toggleFollow}
@@ -235,14 +260,15 @@ export default function PostCard({ post }) {
       </button>
 
       <div className="flex justify-between items-center mt-4">
-        <button
-          onClick={() => setShowDetails(true)}
-          className="flex items-center gap-1 text-blue-600 font-medium hover:underline"
-          aria-label="View Details"
-        >
-          <Info size={18} />
-          Info
-        </button>
+      <button
+  onClick={() => navigate(`/job/${post.id || post._id}`)}
+  className="flex items-center gap-1 text-blue-600 font-medium hover:underline"
+  aria-label="View Details"
+>
+  <Info size={18} />
+  Info
+</button>
+
 
         <button
           aria-label="Save post"
@@ -267,7 +293,7 @@ export default function PostCard({ post }) {
           >
             <h3 className="text-2xl font-bold mb-6">{title || "Job Details"}</h3>
             <p>
-              <strong>Author:</strong> {displayAuthor}
+              <strong>Author:</strong> {displayAuthor.fullName || displayAuthor}
             </p>
             <p>
               <strong>Address:</strong> {address || "N/A"}

@@ -24,6 +24,7 @@ import Save from "@/pages/Save";
 import HomeResume from "./components/HomeResume";
 import Resume from "./components/Resume";
 import ErrorPage from "./components/ErrorPage";
+import JobDetail from "./pages/JobDetail";
 
 function ProtectedRoute({ children }) {
   const { token, authLoading } = useAuth();
@@ -92,7 +93,8 @@ export default function App() {
           <Route path="applicants/:jobId" element={<Applicants />} />
           <Route path="chat/:id" element={<Messaging />} />
           <Route path="jobs/:id" element={<JobList />} />
-          <Route path="job/:id" element={<JobSearch />} />
+          
+          <Route path="job/:id" element={<JobDetail />} />
           <Route path="messaging" element={<Messaging />} />
           <Route path="applied" element={<Applied />} />
            <Route path="profile/:userId" element={<Profile />} />

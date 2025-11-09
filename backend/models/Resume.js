@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-
 const resumeSchema = new mongoose.Schema({
   basicInfo: {
     name: String,
@@ -24,8 +23,17 @@ const resumeSchema = new mongoose.Schema({
     },
   ],
   skills: [String],
+  customFields: [
+    {
+      title: String,
+      content: String,
+    },
+  ],
 }, { timestamps: true });
 
+
+
 const Resume = mongoose.model('Resume', resumeSchema);
+
 
 export default Resume;

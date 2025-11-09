@@ -3,6 +3,8 @@ import * as userController from "../controller/userController.js";
 import authMiddleware from "../middleware/authMiddleware.js";
 import { updateProfile } from '../controller/userController.js';
 import { checkAuth } from "../controller/userController.js";
+import { getUserById } from "../controller/userController.js";
+
 
 
 
@@ -22,5 +24,7 @@ router.put("/:id", authMiddleware, userController.updateUser);
 
 router.put("/update-profile", authMiddleware, updateProfile);
 router.get("/check", authMiddleware, checkAuth);
+router.get("/users/:id", getUserById);
+
 
 export default router;
