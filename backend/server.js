@@ -156,6 +156,11 @@ import messageRoutes from "./routes/messageRoutes.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
 import resumeRoutes from "./routes/resumeRoutes.js";
 import errorHandler from "./middleware/errorHandler.js";
+import path from 'path';
+
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 
@@ -166,6 +171,9 @@ const server = http.createServer(app);
 export const io = new Server(server, {
   cors: { origin: allowedOrigins, credentials: true },
 });
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 
 export const userSocketMap = {};
 

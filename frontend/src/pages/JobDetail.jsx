@@ -9,6 +9,8 @@ export default function JobDetail() {
   const { jobs, fetchJobs } = useJob();
   const [job, setJob] = useState(null);
   const [author, setAuthor] = useState(null);
+  const [authorLoading, setAuthorLoading] = useState(false);
+  const [authorError, setAuthorError] = useState(null);
 
   const demoProfilePic = "https://randomuser.me/api/portraits/men/75.jpg";
   const demoJobImage =
@@ -31,22 +33,30 @@ export default function JobDetail() {
     }
   }, [id, jobs]);
 
-  // Fetch the author details if job exists and author ID is present
-  useEffect(() => {
-    async function loadAuthor() {
-      if (job?.author) {
-        try {
-          const authorData = await fetchAuthorById(job.author);
-          setAuthor(authorData);
-        } catch {
-          setAuthor(null);
-        }
-      } else {
+  // Fetch author details when job changes
+useEffect(() => {
+  async function loadAuthor() {
+    if (job?.author) {
+      setAuthorLoading(true);
+      setAuthorError(null);
+      try {
+        console.log("Fetching author for job.author ID:", job.author);
+        const authorData = await fetchAuthorById(job.author);
+        setAuthor(authorData);
+        console.log("Fetched author data:", authorData);
+      } catch (error) {
+        console.error("Error fetching author:", error);
+        setAuthorError("Failed to load author information");
         setAuthor(null);
       }
+      setAuthorLoading(false);
+    } else {
+      setAuthor(null);
     }
-    loadAuthor();
-  }, [job]);
+  }
+  loadAuthor();
+}, [job]);
+
 
   if (!job) {
     return (
@@ -56,7 +66,6 @@ export default function JobDetail() {
     );
   }
 
-  
   const normalizedJob = {
     id: job._id || job.id,
     authorId: job.authorId || job.author || "unknown",
@@ -82,7 +91,7 @@ export default function JobDetail() {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      {/* --- Banner --- */}
+      {/* Banner */}
       <div
         className="w-full h-80 bg-cover bg-center relative"
         style={{ backgroundImage: `url(${normalizedJob.jobImage})` }}
@@ -93,9 +102,9 @@ export default function JobDetail() {
         </div>
       </div>
 
-      {/* --- Job Details --- */}
+      {/* Job Details */}
       <div className="max-w-7xl mx-auto py-12 px-6 grid md:grid-cols-3 gap-10">
-        {/* --- Left Section --- */}
+        {/* Left Section */}
         <div className="md:col-span-2 bg-white rounded-2xl shadow-md p-8">
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">About this Job</h2>
           <p className="text-gray-600 leading-relaxed mb-8">{normalizedJob.description}</p>
@@ -106,24 +115,29 @@ export default function JobDetail() {
           <PostCard post={normalizedJob} />
         </div>
 
-        {/* --- Right Sidebar --- */}
+        {/* Right Sidebar */}
         <div className="bg-white rounded-2xl shadow-md p-6">
           <h3 className="text-xl font-semibold text-gray-800 mb-4">Job Overview</h3>
           <ul className="space-y-4 text-gray-700">
             <li>
-               <strong>Company:</strong> {normalizedJob.author.fullName}
+              <strong>Company:</strong>{" "}
+              {authorLoading
+                ? "Loading author..."
+                : authorError
+                ? authorError
+                : normalizedJob.author.fullName}
             </li>
             <li>
-               <strong>Location:</strong> {normalizedJob.address}
+              <strong>Location:</strong> {normalizedJob.address}
             </li>
             <li>
-               <strong>Salary:</strong> {normalizedJob.salary ? `₹${normalizedJob.salary}` : "Negotiable"}
+              <strong>Salary:</strong> {normalizedJob.salary ? `₹${normalizedJob.salary}` : "Negotiable"}
             </li>
             <li>
-               <strong>Working Hours:</strong> {normalizedJob.workingHour || "Flexible"}
+              <strong>Working Hours:</strong> {normalizedJob.workingHour || "Flexible"}
             </li>
             <li>
-               <strong>Holiday:</strong> {normalizedJob.holiday || "As per company policy"}
+              <strong>Holiday:</strong> {normalizedJob.holiday || "As per company policy"}
             </li>
           </ul>
 

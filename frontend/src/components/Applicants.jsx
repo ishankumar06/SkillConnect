@@ -86,6 +86,7 @@ export default function Applicants() {
 
         const rawResume = app.resumeUrl || userProfile.resumeUrl || null;
         const normalizedResume = rawResume ? rawResume.replace(/\\/g, "/") : null;
+        console.log("ishhhhhhh Resume URL:", normalizedResume);
 
         return {
           fullName: userProfile.fullName || userProfile.name || "Unnamed",
@@ -105,6 +106,7 @@ export default function Applicants() {
     setJobApplicants(enriched);
     setLoading(false);
   }, [jobApplications, allUsers]);
+
 
   // Loading / authorization checks
   if (loading) {
@@ -253,14 +255,18 @@ export default function Applicants() {
 
                   {applicant.resumeUrl ? (
                     <div className="mt-3">
-                      <a
-                        href={applicant.resumeUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 font-medium hover:underline"
-                      >
-                        View Resume
-                      </a>
+                     <a
+  href={`http://localhost:4000/${applicant.resumeUrl}`}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="text-blue-600 font-medium hover:underline"
+  onClick={(e) => {
+    e.stopPropagation();
+  }}
+>
+  View Resume
+</a>
+
                     </div>
                   ) : (
                     <p className="mt-3 text-gray-400 italic">Resume not provided</p>
@@ -270,7 +276,7 @@ export default function Applicants() {
                     {/* If current user is job poster, show action buttons */}
                     {isJobPoster ? (
                       <>
-                        <Button
+                        {/* <Button
                           onClick={() => {
                             // Hook into your accept/reject logic here
                             // e.g., call an API or context action to update application status
@@ -279,8 +285,8 @@ export default function Applicants() {
                           className="bg-white text-yellow-600 border border-yellow-200 hover:bg-yellow-50 rounded-xl shadow-sm px-4 transition"
                         >
                           Accept
-                        </Button>
-
+                        </Button> */}
+{/* 
                         <Button
                           onClick={() => {
                             alert(`Reject ${applicant.fullName} — implement API call`);
@@ -288,7 +294,7 @@ export default function Applicants() {
                           className="bg-white text-yellow-600 border border-yellow-200 hover:bg-yellow-50 rounded-xl shadow-sm px-4 transition"
                         >
                           Reject
-                        </Button>
+                        </Button> */}
                       </>
                     ) : (
                       <Button

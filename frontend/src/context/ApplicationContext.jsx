@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
-import api from "../api"; // Your axios instance
+import api from "../api"; 
 
 const ApplicationContext = createContext();
 
@@ -29,36 +29,48 @@ export function ApplicationProvider({ children }) {
 
 
   // Apply to a job (POST)
-  const applyToJob = async (jobId, resumeFile, name, about, skills) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const formData = new FormData();
-      formData.append("jobId", jobId);
-      formData.append("name", name);
-      formData.append("about", about);
+const applyToJob = async (jobId, resumeFile, name, about, skills) => { 
+  setLoading(true);
+  setError(null);
+  try {
+    const formData = new FormData();
+    formData.append("jobId", jobId);
+    formData.append("name", name);
+    formData.append("about", about);
 
-      if (resumeFile) {
-        formData.append("resume", resumeFile);
-      }
-
-      if (skills && Array.isArray(skills) && skills.length) {
-        skills.forEach((skill) => formData.append("skills", skill));
-      }
-        
-      const response = await api.post("/applications/apply", formData);
-      await fetchApplications(); // refresh list after apply
-      console.log("Applications data:sssssss", response.data);
-
-      return response.data;
-    } catch (err) {
-      setError("Failed to apply to job");
-      console.error("ApplyToJob error:", err.response || err);
-      throw err;
-    } finally {
-      setLoading(false);
+    if (resumeFile) {
+      formData.append("resume", resumeFile);
     }
-  };
+
+    if (skills && Array.isArray(skills) && skills.length) {
+      
+      formData.append("skills", JSON.stringify(skills));
+    }
+
+ 
+    for (let pair of formData.entries()) {
+      console.log(pair[0], pair[1]);
+    }
+
+    const response = await api.post("/applications/apply", formData, {
+
+      headers: {
+    
+      },
+    });
+
+    await fetchApplications(); // refresh list after apply
+    console.log("Applications data:", response.data);
+
+    return response.data;
+  } catch (err) {
+    setError("Failed to apply to job");
+    console.error("ApplyToJob error:", err.response ? err.response.data : err);
+    throw err;
+  } finally {
+    setLoading(false);
+  }
+};
 
   // Update application status (PUT)
   const updateApplicationStatus = async (applicationId, status) => {

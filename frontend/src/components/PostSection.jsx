@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useJob } from "../context/JobContext";
+import { useAuth } from "../context/AuthContext";
 
 function fileToBase64(file) {
   return new Promise((resolve, reject) => {
@@ -18,10 +19,18 @@ const icon = (
 
 export default function PostSection() {
   const { addJob } = useJob();
+  const { authUser } = useAuth();
 
   const [form, setForm] = useState({
-    author: "", time: "", title: "", content: "",
-    address: "", workType: "", salary: "", workingHour: "", holiday: "", image: "",
+    time: "",
+    title: "",
+    content: "",
+    address: "",
+    workType: "",
+    salary: "",
+    workingHour: "",
+    holiday: "",
+    image: "",
   });
 
   const [imagePreview, setImagePreview] = useState(null);
@@ -53,7 +62,6 @@ export default function PostSection() {
 
   const isFormValid = () => {
     return (
-      form.author.trim() !== "" &&
       form.title.trim() !== "" &&
       form.content.trim() !== "" &&
       form.address.trim() !== "" &&
@@ -66,11 +74,21 @@ export default function PostSection() {
 
   const handlePost = (e) => {
     e.preventDefault();
-    if (!isFormValid()) return;
+
+    if (!authUser || !authUser._id) {
+      alert("You must be logged in to post a job.");
+      return;
+    }
+
+    if (!isFormValid()) {
+      alert("Please fill in all required fields.");
+      return;
+    }
 
     const uniqueId = Date.now().toString();
     const newPost = {
       id: uniqueId,
+      author: authUser._id, // Set author as logged in user's ID here
       ...form,
       time: new Date().toLocaleString(),
       likes: 0,
@@ -82,14 +100,20 @@ export default function PostSection() {
     addJob(newPost);
 
     setForm({
-      author: "", time: "", title: "", content: "",
-      address: "", workType: "", salary: "", workingHour: "", holiday: "", image: "",
+      time: "",
+      title: "",
+      content: "",
+      address: "",
+      workType: "",
+      salary: "",
+      workingHour: "",
+      holiday: "",
+      image: "",
     });
     setImagePreview(null);
   };
 
   const fields = [
-    { name: "author", placeholder: "Author", required: true },
     { name: "title", placeholder: "Job Title", required: true },
     { name: "content", placeholder: "Job Description", as: "textarea", rows: 3, required: true },
     { name: "address", placeholder: "Address", required: true },
