@@ -12,18 +12,23 @@ export const ChatProvider = ({ children }) => {
 
   const { socket, axios, authUser } = useContext(AuthContext);
 
-  // Fetch all users for the sidebar
-  const getUsers = async () => {
+  // ✅ ADDED: fetchChats for DataPreloader (renamed from getUsers)
+  const fetchChats = async () => {
     try {
       const { data } = await axios.get("/api/messages/users");
       if (data.success) {
         setUsers(data.users);
         setUnseenMessages(data.unseenMessages);
+        console.log("✅ Chat users preloaded:", data.users.length);
       }
     } catch (error) {
-      toast.error(error.message || "Failed to load users");
+      console.error("Failed to preload chats:", error);
+      toast.error(error.message || "Failed to load chats");
     }
   };
+
+  // Keep original getUsers for backward compatibility
+  const getUsers = fetchChats;
 
   // Fetch messages for the selected user
   const getMessages = async (userId) => {
@@ -37,7 +42,7 @@ export const ChatProvider = ({ children }) => {
     }
   };
 
-  // Send message to selected user, enrich newMessage with sender profilePic
+  // Send message to selected user
   const sendMessage = async (messageData) => {
     if (!selectedUser) {
       toast.error("No user selected");
@@ -59,11 +64,10 @@ export const ChatProvider = ({ children }) => {
     }
   };
 
-  // Subscribe to new messages from socket and enrich sender profile pic before adding
+  // Subscribe to new messages from socket
   const subscribeToMessages = () => {
     if (!socket) return;
     socket.on("newMessage", (newMessage) => {
-      // Find sender in users or use authUser if it matches
       const senderUser =
         users.find((u) => u._id === newMessage.senderId) ||
         (authUser && authUser._id === newMessage.senderId ? authUser : null);
@@ -98,26 +102,26 @@ export const ChatProvider = ({ children }) => {
     return () => unsubscribeFromMessages();
   }, [socket, selectedUser]);
 
-  // Compute total unread messages count from unseenMessages object
+  // Compute total unread messages count
   const unreadCount = Object.values(unseenMessages).reduce((total, count) => total + count, 0);
 
   const value = {
     messages,
     users,
     selectedUser,
-    getUsers,
+    getUsers,        // ✅ Original name (unchanged)
+    fetchChats,      // ✅ NEW for DataPreloader
     getMessages,
     sendMessage,
     setSelectedUser,
     unseenMessages,
     setUnseenMessages,
-    unreadCount, // expose unreadCount for badges
+    unreadCount,
   };
 
   return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;
 };
 
-// Custom hook to use the ChatContext easily
 export const useChat = () => {
   const context = useContext(ChatContext);
   if (!context) {

@@ -29,9 +29,9 @@ export default function FollowToggleButton({ targetUserId }) {
   return (
     <button
       onClick={toggleFollow}
-      className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs transition border whitespace-nowrap ${
+      className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs transition border  ${
         isFollowing
-          ? "bg-green-500/30 text-white border-green-500/30 hover:bg-green-500/30"
+          ? "bg-green-500/30 text-white border-[#403d41] hover:bg-[#403d41]"
           : "bg-transparent text-gray-700 border-gray-400 hover:bg-gray-100"
       }`}
     >

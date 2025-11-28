@@ -32,41 +32,41 @@ export default function Header() {
   };
 
   return (
-    <header className="w-full px-8 py-4 flex items-center justify-between bg-white shadow relative">
+    <header className="w-full px-8 py-4 flex items-center justify-between bg-[#403d41] shadow relative">
       {/* Logo */}
       <Link to="/" className="flex items-center gap-3 flex-shrink-0">
         <img src={skillLogo} alt="SkillConnect Logo" className="h-10" />
-        <span className="text-2xl font-bold text-gray-900">SkillConnect</span>
+        <span className="text-2xl font-bold text-white ">SkillConnect</span>
       </Link>
 
       {/* Navigation */}
       <nav className="flex items-center gap-8 flex-1 justify-center">
-        <Link to="/" className="flex items-center gap-1 text-gray-700 hover:text-blue-600 relative">
+        <Link to="/" className="flex items-center gap-1 text-white hover:text-black-600 relative">
           <HomeIcon size={24} />
           <span className="hidden sm:inline text-base font-medium">Home</span>
         </Link>
         <button
           onClick={() => navigate("/joblist")}
-          className="flex items-center gap-1 text-gray-700 hover:text-blue-600 font-medium"
+          className="flex items-center gap-1 text-white  hover:text-white-600 font-medium"
           aria-label="Posts"
         >
           <Pencil size={20} />
           <span className="hidden sm:inline text-base font-medium">Posts</span>
         </button>
-        <Link to="/connections" className="flex items-center gap-1 text-gray-700 hover:text-blue-600 relative">
+        <Link to="/connections" className="flex items-center gap-1 text-white  hover:text-white-600 relative">
           <Users size={24} />
           <span className="hidden sm:inline text-base font-medium">Connections</span>
         </Link>
         <button
           onClick={() => navigate("/messaging")}
           aria-label="Messages"
-          className="flex items-center gap-1 text-gray-700 hover:text-blue-600 relative"
+          className="flex items-center gap-1 text-white  hover:text-white-600 relative"
         >
           <MessageCircle size={24} />
           <span className="hidden sm:inline text-base font-medium">Messages</span>
           <Badge count={messageUnread} />
         </button>
-        <Link to="/notifications" className="flex items-center gap-1 text-gray-700 hover:text-blue-600 relative">
+        <Link to="/notifications" className="flex items-center gap-1 text-white  hover:text-white-600 relative">
           <Bell size={24} />
           <span className="hidden sm:inline text-base font-medium">Notifications</span>
           <Badge count={notificationUnread} />
@@ -77,7 +77,7 @@ export default function Header() {
       <div className="relative flex-shrink-0">
         <button
           onClick={() => setOpenUser(!openUser)}
-          className="flex items-center gap-2 text-gray-700 font-medium hover:text-blue-600 focus:outline-none"
+          className="flex items-center gap-2 text-white  font-medium hover:text-white-600 focus:outline-none"
           aria-haspopup="true"
           aria-expanded={openUser}
           aria-label="User menu"
@@ -102,7 +102,7 @@ export default function Header() {
                 <p className="font-semibold">{profile?.name || user?.name || "User"}</p>
                 <Link
                   to="/profile"
-                  className="text-sm text-blue-600 hover:underline"
+                  className="text-sm text-white-600 hover:underline"
                   onClick={() => setOpenUser(false)}
                 >
                   View Profile

@@ -70,9 +70,9 @@ const ChatContainer = () => {
 
   if (!selectedUser || !authUser) {
     return (
-      <div className="flex flex-col items-center justify-center gap-2 text-gray-500 bg-white/10 max-md:hidden h-full w-full px-4 box-border">
-        <img src={skill} alt="Logo" className="max-w-16" />
-        <p className="text-lg font-medium text-black text-center">SkillConnect a way to connect</p>
+      <div className="flex flex-col items-center justify-center gap-2 text-gray-500 bg-black max-md:hidden h-full w-full px-4 box-border">
+        
+        <p className="text-lg font-medium text-white text-center">SkillConnect a way to connect</p>
       </div>
     );
   }

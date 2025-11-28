@@ -57,7 +57,7 @@ const Notifications = () => {
 
   return (
     <div
-      className="w-full h-screen flex flex-col p-4 gap-4 bg-white"
+      className="w-full h-screen flex flex-col p-4 gap-4 bg-white text-white"
       style={{
         backgroundImage: `url(${bgImage})`,
         backgroundRepeat: "no-repeat",

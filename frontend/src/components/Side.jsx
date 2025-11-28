@@ -25,7 +25,7 @@ const Sidebar = () => {
   const toggleMenu = () => setShowMenu(prev => !prev);
 
   return (
-    <div className={`bg-[#818582]/10 h-full p-5 rounded-r-xl overflow-y-scroll text-black ${selectedUser ? "max-md:hidden" : ''}`}>
+    <div className={`bg-black h-full p-5 rounded-r-xl overflow-y-scroll text-black ${selectedUser ? "max-md:hidden" : ''}`}>
       <div className='pb-5'>
         <div className='flex justify-between items-center'>
           <img src={skill} alt="logo" className='max-w-40' />

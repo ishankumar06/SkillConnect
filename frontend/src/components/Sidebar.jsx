@@ -80,13 +80,13 @@ updateProfile({ connections: updatedConnections });
   ];
 
   return (
-    <aside className="w-64 bg-white p-6 shadow h-screen flex flex-col">
-      <nav className="flex flex-col gap-4 mb-6">
+    <aside className="w-64 bg-black p-6 shadow h-screen flex flex-col">
+      <nav className="flex flex-col gap-4 mb-6 text-white">
         {links.map((link) => (
           <Link
             key={link.name}
             to={link.path}
-            className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-100 transition"
+            className="flex items-center gap-3 p-2 rounded-lg "
           >
             {link.icon}
             <span className="font-medium">{link.name}</span>

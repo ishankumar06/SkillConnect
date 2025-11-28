@@ -153,7 +153,7 @@ export default function PostCard({ post }) {
 
 
   const followButtonClass = isFollowing
-    ? "bg-green-600 text-white border-green-600"
+    ? "bg-[#403d41] text-white border-[#403d41]"
     : "bg-transparent text-gray-700 border-gray-400 hover:bg-gray-100";
 
   let imageSrc = finalJobImage;
@@ -180,7 +180,7 @@ export default function PostCard({ post }) {
   };
 
   return (
-    <div className="relative bg-white shadow-md rounded-2xl p-6 max-w-4xl mx-auto flex flex-col gap-4 min-h-[550px]">
+    <div className="relative bg-#2D3748 shadow-md rounded-2xl p-6 max-w-4xl mx-auto flex flex-col gap-4 min-h-[550px]">
       <div className="flex justify-between items-start">
         <div
           className="flex items-center gap-4 cursor-pointer"
@@ -206,7 +206,7 @@ export default function PostCard({ post }) {
           <button
   onClick={handleShare}
   aria-label="Share post"
-  className="text-gray-500 hover:text-blue-600 transition"
+  className="text-gray-500 hover:text-white-600 transition"
 >
   <Share2 size={24} />
 </button>
@@ -251,8 +251,8 @@ export default function PostCard({ post }) {
         disabled={isInterested}
         className={`w-full mt-4 rounded-md py-3 font-semibold ${
           isInterested
-            ? "bg-yellow-400 text-black cursor-not-allowed"
-            : "bg-yellow-300 hover:bg-yellow-400 text-black"
+            ? "bg-[#403d41] text-yellow-600 border border-yellow-200 hover:bg-yellow-50 hover:border-yellow-500 cursor-not-allowed"
+            : "bg-[#403d41] text-yellow-600 border border-yellow-200 hover:bg-yellow-50 hover:border-yellow-500 hover:text-yellow-700 cursor-pointer"
         } transition`}
         aria-disabled={isInterested}
       >
@@ -262,7 +262,7 @@ export default function PostCard({ post }) {
       <div className="flex justify-between items-center mt-4">
       <button
   onClick={() => navigate(`/job/${post.id || post._id}`)}
-  className="flex items-center gap-1 text-blue-600 font-medium hover:underline"
+  className="flex items-center gap-1 text-white font-medium hover:underline"
   aria-label="View Details"
 >
   <Info size={18} />
@@ -275,7 +275,7 @@ export default function PostCard({ post }) {
           onClick={onSaveClick}
           disabled={isAlreadySaved}
           className={`transition ${
-            isAlreadySaved ? "text-blue-600" : "text-gray-500 hover:text-blue-600"
+            isAlreadySaved ? "text-white-600" : "text-gray-500 hover:text-white"
           }`}
         >
           <Save size={24} />

@@ -45,7 +45,7 @@ export default function JobSearch() {
     "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=60";
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100 p-6 space-y-6"
+    <div className="flex flex-col min-h-screen bg-gray-800 p-6 space-y-6"
     style={{
             backgroundImage: `url(${bgImage})`,
             backgroundRepeat: 'no-repeat',

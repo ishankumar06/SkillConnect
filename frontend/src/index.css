@@ -2,46 +2,71 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ...existing code... */
 
-main::-webkit-scrollbar {
-  width: 8px; 
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-main::-webkit-scrollbar-track {
-  background: transparent;
-}
-
+/* scrollbars */
+main::-webkit-scrollbar { width: 8px; }
+main::-webkit-scrollbar-track { background: transparent; }
 main::-webkit-scrollbar-thumb {
-  background-color: white; 
+  background-color: #2A2A44;
   border-radius: 4px;
-  border: 2px solid transparent; 
-  background-clip: content-box; 
-}
-
-
-main {
-  scrollbar-width: thin;
-  scrollbar-color: white transparent;
-}
-
-/* ye sidebar ka scrobbale hai */
-
-aside::-webkit-scrollbar {
-  width: 8px;
-}
-
-aside::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-aside::-webkit-scrollbar-thumb {
-  background-color: white;
-  border-radius: 4px;
-  border: 2px solid transparent; 
+  border: 2px solid transparent;
   background-clip: content-box;
 }
-
-aside {
-  scrollbar-width: thin;
-  scrollbar-color: white transparent;
+main { 
+  scrollbar-width: thin; 
+  scrollbar-color: white transparent; 
 }
+
+/* sidebar scrollbar - now matches main */
+aside::-webkit-scrollbar { width: 8px; }
+aside::-webkit-scrollbar-track { background: transparent; }
+aside::-webkit-scrollbar-thumb {
+  background-color: #2A2A44; /* now visible, same as main */
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+aside { 
+  scrollbar-width: thin; 
+  scrollbar-color: white transparent; 
+}
+
+/* layout reset */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* ensure a full-page background (fallback even if Tailwind not applied) */
+body {
+  background-color: #403d41 !important; /* bg-gray-800 */
+  min-height: 100vh;
+}
+
+/* top-level app wrapper */
+.app-global-bg {
+  min-height: 100vh;
+  background-color: transparent; /* let body color show */
+  display: flex;
+  flex-direction: column;
+  gap: 0 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+/* ensure direct children don't add spacing or opaque backgrounds */
+#root > * { margin: 0 !important; padding: 0 !important; }
+.app-global-bg > * { background: transparent !important; }
+
+/* reset headings/paragraph defaults */
+h1,h2,h3,h4,h5,h6,p { margin: 0; padding: 0; }
+
+/* ...existing code... */

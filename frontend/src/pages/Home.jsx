@@ -22,7 +22,7 @@ export default function Home() {
 
   return (
     <div
-      className="flex min-h-screen bg-gray-100"
+      className="flex min-h-screen bg-#6A1B9A"
       style={{
         backgroundImage: `url(${bgImage})`,
         backgroundRepeat: 'no-repeat',

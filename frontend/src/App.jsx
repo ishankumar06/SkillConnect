@@ -41,14 +41,14 @@ function ProtectedLayout() {
       <header className="sticky top-0 z-50">
         <Header />
       </header>
-      <div className="flex flex-1 overflow-hidden">
-        <aside className="sticky top-16 h-[calc(100vh-4rem)] w-64 bg-gray-50 overflow-auto">
+      <div className="flex flex-1 ">
+        <aside className="sticky top-16 h-[calc(100vh-4rem)]  bg-gray-50 ">
           <Sidebar />
         </aside>
-        <main className="flex-1 overflow-y-auto p-6">
+        <main className="flex-1 p-6">
           <Outlet />
         </main>
-        <aside className="sticky top-16 h-[calc(100vh-4rem)] w-64 bg-gray-50 overflow-auto">
+        <aside className="sticky top-16 h-[calc(100vh-4rem)]  bg-gray-50 ">
           <RightSidebar />
         </aside>
       </div>
@@ -102,7 +102,7 @@ export default function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
 
-=
+
         <Route path="*" element={<ErrorPage />} />
       </Routes>
    
