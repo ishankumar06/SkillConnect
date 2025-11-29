@@ -98,6 +98,7 @@ export default function App() {
           <Route path="messaging" element={<Messaging />} />
           <Route path="applied" element={<Applied />} />
            <Route path="profile/:userId" element={<Profile />} />
+           
           
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>

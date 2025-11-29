@@ -1,38 +1,105 @@
+import mongoose from "mongoose";
 import Message from "../models/Message.js";
 import User from "../models/userModel.js";
 import cloudinary from "../config/cloudinary.js";
-
 import { io, userSocketMap, emitNotificationToUser } from "../server.js";
-import { createNotification } from "../config/createNotification.js"; 
+import { createNotification } from "../config/createNotification.js";
 
-// get all users except the logged in user
 export const getUsersForSidebar = async (req, res) => {
   console.log("getUsersForSidebar controller called");
   try {
     const userId = req.user.userId;
+    const userObjectId = new mongoose.Types.ObjectId(userId);
 
-    console.log("Logged in user ID:", userId);
+    const chatUsersAggregation = await Message.aggregate([
+  {
+    $match: {
+      $or: [
+        { senderId: userObjectId },
+        { receiverId: userObjectId }
+      ]
+    }
+  },
+  // sort messages newest → oldest
+  { $sort: { createdAt: -1 } },
+  {
+    $group: {
+      _id: {
+        $cond: [
+          { $eq: ["$senderId", userObjectId] },
+          "$receiverId",
+          "$senderId"
+        ]
+      },
+      lastMessageTime: { $first: "$createdAt" }
+    }
+  },
+  {
+    $lookup: {
+      from: "users",
+      localField: "_id",
+      foreignField: "_id",
+      as: "user"
+    }
+  },
+  { $unwind: "$user" },
+  {
+    $match: {
+      "user._id": { $ne: userObjectId }
+    }
+  },
+  {
+    $project: {
+      _id: "$user._id",
+      fullName: "$user.fullName",
+      profilePic: "$user.profilePic",
+      role: "$user.role",
+      email: "$user.email",
+      lastMessageTime: 1
+    }
+  },
+  // final sort by latest message time
+  { $sort: { lastMessageTime: -1 } }
+]);
 
-    const filteredUsers = await User.find({ _id: { $ne: userId } }).select("-password");
-    console.log("Number of other users found:", filteredUsers.length);
+
+    const chatUsers = chatUsersAggregation.map(u => ({
+      ...u,
+      hasChatted: true
+    }));
+
+    const unseenMessagesAggregation = await Message.aggregate([
+      {
+        $match: {
+          receiverId: userObjectId,
+          seen: false
+        }
+      },
+      {
+        $group: {
+          _id: "$senderId",
+          count: { $sum: 1 }
+        }
+      }
+    ]);
 
     const unseenMessages = {};
-    const promises = filteredUsers.map(async (user) => {
-      const messages = await Message.find({ senderId: user._id, receiverId: userId, seen: false });
-      if (messages.length > 0) {
-        unseenMessages[user._id] = messages.length;
-      }
+    unseenMessagesAggregation.forEach(({ _id, count }) => {
+      unseenMessages[_id.toString()] = count;
     });
-    await Promise.all(promises);
 
-    res.json({ success: true, users: filteredUsers, unseenMessages });
+    console.log("Chat users found:", chatUsers.length);
+    res.json({
+      success: true,
+      users: chatUsers,
+      unseenMessages
+    });
   } catch (error) {
     console.error("Error in getUsersForSidebar:", error.message);
     res.status(500).json({ success: false, message: error.message });
   }
 };
 
-// api to mark message as seen using message id
 export const markMessageAsSeen = async (req, res) => {
   try {
     const { id } = req.params;
@@ -45,7 +112,6 @@ export const markMessageAsSeen = async (req, res) => {
   }
 };
 
-// getMessages controller
 export const getMessages = async (req, res) => {
   console.log("getMessages called");
   try {
@@ -60,7 +126,10 @@ export const getMessages = async (req, res) => {
       ]
     }).populate({ path: "senderId", model: "User", select: "profilePic fullName" });
 
-    await Message.updateMany({ senderId: selectedUserId, receiverId: myId, seen: false }, { $set: { seen: true } });
+    await Message.updateMany(
+      { senderId: selectedUserId, receiverId: myId, seen: false },
+      { $set: { seen: true } }
+    );
 
     console.log("Messages retrieved:", messages.length);
     res.json({ success: true, messages });
@@ -70,7 +139,6 @@ export const getMessages = async (req, res) => {
   }
 };
 
-// sendMessage controller with notifications and socket emission, includes redirect link to chat
 export const sendMessage = async (req, res) => {
   try {
     const { text, image } = req.body;
@@ -84,6 +152,7 @@ export const sendMessage = async (req, res) => {
       imageUrl = uploadResponse.secure_url;
       console.log("Image uploaded:", imageUrl);
     }
+
     let newMessage = await Message.create({
       senderId,
       receiverId,
@@ -91,15 +160,18 @@ export const sendMessage = async (req, res) => {
       image: imageUrl
     });
 
-    newMessage = await newMessage.populate({ path: "senderId", model: "User", select: "profilePic fullName" });
+    newMessage = await newMessage.populate({
+      path: "senderId",
+      model: "User",
+      select: "profilePic fullName"
+    });
 
-    // Create notification with redirect link to chat page
     const notification = await createNotification({
       userId: receiverId,
       type: "message",
       fromUserId: senderId,
       message: `New message from ${newMessage.senderId.fullName}`,
-      link: `/chat/${senderId}`,
+      link: `/chat/${senderId}`
     });
 
     const receiverSocketId = userSocketMap[receiverId];

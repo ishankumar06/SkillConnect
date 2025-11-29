@@ -25,7 +25,7 @@ function ConnectionItem({ name, title, avatarUrl, onClick }) {
   return (
     <div
       onClick={onClick}
-      className="flex justify-between items-center bg-white p-4 rounded-xl shadow mb-3 w-full cursor-pointer hover:bg-gray-100 transition"
+      className="flex justify-between items-center bg-[#403d41] p-4 rounded-xl shadow mb-3 w-full cursor-pointer hover:bg-[#4a474b] transition-all"
       style={{
         backgroundImage: `url(${bgImage})`,
         backgroundRepeat: "no-repeat",
@@ -38,16 +38,16 @@ function ConnectionItem({ name, title, avatarUrl, onClick }) {
           <img
             src={avatarUrl}
             alt={`${name} avatar`}
-            className="w-14 h-14 rounded-full object-cover border-2 border-green-500"
+            className="w-14 h-14 rounded-full object-cover border-2 border-white flex-shrink-0"
           />
         ) : (
-          <div className="w-14 h-14 rounded-full bg-green-100 flex items-center justify-center text-green-600 font-bold text-lg">
+          <div className="w-14 h-14 rounded-full bg-white flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
             {name?.charAt(0) || "?"}
           </div>
         )}
-        <div>
-          <h4 className="font-semibold">{name}</h4>
-          <p className="text-gray-500 text-sm">{title}</p>
+        <div className="min-w-0">
+          <h4 className="font-semibold text-white text-lg truncate">{name}</h4>
+          <p className="text-gray-300 text-sm truncate">{title}</p>
         </div>
       </div>
     </div>
@@ -128,8 +128,8 @@ export default function MyProfile() {
   // 🧱 Loading fallback (after all hooks)
   if (!viewingUser) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <p className="text-gray-500">Loading profile...</p>
+      <div className="flex items-center justify-center h-screen bg-[#403d41]">
+        <p className="text-white text-lg">Loading profile...</p>
       </div>
     );
   }
@@ -229,9 +229,9 @@ export default function MyProfile() {
   // 🧱 Render
   return (
     <div
-      className="flex min-h-screen bg-gray-100 p-0"
+      className="flex min-h-screen bg-[#403d41] p-6"
       style={{
-        backgroundImage: `url(${bgImageUrl})`,
+        backgroundImage: `url(${bgImage})`,
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
         backgroundPosition: "center",
@@ -252,10 +252,10 @@ export default function MyProfile() {
         accept="image/*"
       />
 
-      <div className="flex flex-col flex-1 space-y-6">
+      <div className="flex flex-col flex-1 space-y-6 max-w-6xl mx-auto w-full">
         {/* --- Background Section --- */}
         <div className="relative">
-          <div className="h-60 w-full bg-gray-300 rounded-md overflow-hidden relative">
+          <div className="h-60 w-full bg-gray-300 rounded-2xl overflow-hidden relative shadow-2xl">
             {bgImageUrl ? (
               <img
                 src={bgImageUrl}
@@ -273,7 +273,7 @@ export default function MyProfile() {
             )}
             {isOwnProfile && (
               <button
-                className="absolute top-3 right-3 bg-white p-2 rounded-full shadow hover:bg-blue-100 transition"
+                className="absolute top-3 right-3 bg-white p-2 rounded-full shadow hover:bg-white transition"
                 onClick={() => setBgMenu(!bgMenu)}
               >
                 <Pencil size={20} />
@@ -313,7 +313,7 @@ export default function MyProfile() {
               />
               {isOwnProfile && (
                 <button
-                  className="absolute bottom-2 right-2 bg-white rounded-full p-1 shadow hover:bg-blue-100 border"
+                  className="absolute bottom-2 right-2 bg-white rounded-full p-1 shadow hover:bg-white border"
                   onClick={handleEditPhoto}
                   title="Change Profile Photo"
                 >
@@ -327,16 +327,16 @@ export default function MyProfile() {
         <div className="h-20"></div>
 
         {/* --- Profile Info --- */}
-        <Card className="p-6">
+        <Card className="p-8 bg-[#403d41]/90 backdrop-blur-sm border border-white/20">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-semibold">
+            <h2 className="text-2xl font-semibold text-white">
               {isOwnProfile ? "Your Profile Info" : `${name}'s Profile`}
             </h2>
             {isOwnProfile && (
               <button
                 onClick={() => setEditingProfileInfo(!editingProfileInfo)}
                 aria-label="Edit Profile Info"
-                className="hover:text-blue-600 transition"
+                className="hover:text-white transition"
               >
                 <Pencil size={20} />
               </button>
@@ -345,7 +345,7 @@ export default function MyProfile() {
           {editingProfileInfo && isOwnProfile ? (
             <>
               <input
-                className="w-full p-2 mb-4 border rounded focus:ring-2 focus:ring-blue-500"
+                className="w-full p-2 mb-4 border rounded focus:ring-2 focus:ring-white"
                 type="text"
                 value={localName}
                 onChange={(e) => handleProfileChange("name", e.target.value)}
@@ -353,7 +353,7 @@ export default function MyProfile() {
                 placeholder="Name"
               />
               <input
-                className="w-full p-2 mb-4 border rounded focus:ring-2 focus:ring-blue-500"
+                className="w-full p-2 mb-4 border rounded focus:ring-2 focus:ring-white"
                 type="text"
                 value={localRole}
                 onChange={(e) => handleProfileChange("role", e.target.value)}
@@ -361,7 +361,7 @@ export default function MyProfile() {
                 placeholder="Role"
               />
               <input
-                className="w-full p-2 mb-4 border rounded focus:ring-2 focus:ring-blue-500"
+                className="w-full p-2 mb-4 border rounded focus:ring-2 focus:ring-white"
                 type="text"
                 value={localContact}
                 onChange={(e) => handleProfileChange("contact", e.target.value)}
@@ -371,20 +371,20 @@ export default function MyProfile() {
             </>
           ) : (
             <>
-              <h2 className="text-xl font-semibold">{name}</h2>
-              <p className="text-gray-600">{role}</p>
-              <p className="text-gray-600">{contact}</p>
+              <h2 className="text-xl font-semibold text-white">{name}</h2>
+              <p className="text-gray-300">{role}</p>
+              <p className="text-gray-300">{contact}</p>
             </>
           )}
         </Card>
 
         {/* --- About Me --- */}
-        <Card className="p-6 mt-6">
+        <Card className="p-8 mt-6 bg-[#403d41]/90 backdrop-blur-sm border border-white/20">
           <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-semibold">About Me</h2>
+            <h2 className="text-2xl font-semibold text-white">About Me</h2>
             {isOwnProfile && (
               <button
-                className="hover:text-blue-600 transition"
+                className="hover:text-white transition"
                 onClick={() => setEditingBio(!editingBio)}
                 aria-label="Edit About Me"
               >
@@ -394,25 +394,25 @@ export default function MyProfile() {
           </div>
           {editingBio && isOwnProfile ? (
             <textarea
-              className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
+              className="w-full p-2 border rounded focus:ring-2 focus:ring-white"
               rows={4}
               value={localAbout}
               onChange={(e) => setLocalAbout(e.target.value)}
             />
           ) : (
-            <p className="whitespace-pre-line">{about}</p>
+            <p className="text-gray-200 whitespace-pre-line">{about}</p>
           )}
         </Card>
 
         {/* --- Education / Internships / Skills --- */}
         {["Education", "Internships", "Skills"].map((section) => (
-          <Card key={section} className="p-6 mt-6">
+          <Card key={section} className="p-8 mt-6 bg-[#403d41]/90 backdrop-blur-sm border border-white/20">
             <div className="flex items-center gap-2 mb-4">
               {React.createElement(iconMap[section] || Pencil, {
                 size: 24,
-                className: "text-blue-600",
+                className: "text-white",
               })}
-              <h2 className="text-xl font-semibold">{section}</h2>
+              <h2 className="text-xl font-semibold text-white">{section}</h2>
             </div>
             {(sections[section] || []).map((item, idx) => (
               <div key={idx} className="flex items-center gap-3 mb-3">
@@ -422,7 +422,7 @@ export default function MyProfile() {
                   onChange={(e) =>
                     handleSectionEdit(section, idx, e.target.value)
                   }
-                  className="flex-grow p-2 border rounded focus:ring-2 focus:ring-blue-500"
+                  className="flex-grow p-2 border rounded focus:ring-2 focus:ring-white"
                   readOnly={!isOwnProfile}
                 />
                 {isOwnProfile && (
@@ -445,11 +445,11 @@ export default function MyProfile() {
                   onChange={(e) =>
                     handleNewInputChange(section, e.target.value)
                   }
-                  className="flex-grow p-2 border rounded focus:ring-2 focus:ring-blue-500"
+                  className="flex-grow p-2 border rounded focus:ring-2 focus:ring-white"
                 />
                 <button
                   onClick={() => handleSectionAdd(section)}
-                  className="text-blue-600 hover:text-blue-800"
+                  className="text-white hover:text-white"
                   aria-label={`Add new ${section}`}
                 >
                   <PlusCircle size={28} />
@@ -460,14 +460,12 @@ export default function MyProfile() {
         ))}
 
         {/* --- Connections --- */}
-        <Card className="p-6">
+        <Card className="p-8 bg-[#403d41]/90 backdrop-blur-sm border border-white/20">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-semibold text-gray-800">
-              Connections
-            </h2>
+            <h2 className="text-lg font-semibold text-white">Connections</h2>
             <button
               onClick={() => navigate("/connections")}
-              className="text-blue-600 text-sm hover:underline"
+              className="text-white text-sm hover:underline"
             >
               View All
             </button>
@@ -476,14 +474,14 @@ export default function MyProfile() {
             displayedConnections.map((user) => (
               <ConnectionItem
                 key={user._id}
-                name={user.name}
+                name={user.fullName}
                 title={user.role || user.title}
                 avatarUrl={user.profilePic || user.avatarUrl}
                 onClick={() => navigate(`/profile/${user._id}`)}
               />
             ))
           ) : (
-            <p className="text-center text-gray-500">No connections yet</p>
+            <p className="text-center text-gray-300">No connections yet</p>
           )}
         </Card>
       </div>

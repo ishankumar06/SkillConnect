@@ -107,10 +107,10 @@ updateProfile({ connections: updatedConnections });
 
       <div>
         <div className="flex justify-between items-center mb-3">
-          <h2 className="text-lg font-semibold text-gray-800">Suggested for you</h2>
+          <h2 className="text-lg font-semibold text-white">Suggested for you</h2>
           <button
             onClick={() => navigate("/youknow")}
-            className="text-blue-600 text-sm hover:underline"
+            className="text-white text-sm hover:underline"
           >
             View All
           </button>
@@ -127,7 +127,7 @@ updateProfile({ connections: updatedConnections });
                 >
                   <Link
   to={`/profile/${user._id}`}
-  className="flex items-center gap-3 cursor-pointer flex-grow min-w-0 hover:bg-gray-100 p-1 rounded-lg transition"
+  className="flex items-center gap-3 cursor-pointer flex-grow min-w-0 "
 >
   <img
     src={user.profilePic || user.avatarUrl}
@@ -135,7 +135,7 @@ updateProfile({ connections: updatedConnections });
     className="w-10 h-10 rounded-full object-cover flex-shrink-0"
   />
   <div className="truncate">
-    <p className="font-medium text-gray-800 text-sm truncate">{user.fullName}</p>
+    <p className="font-medium text-white text-sm truncate">{user.fullName}</p>
     <p className="text-xs text-gray-500 truncate">{user.role || user.title}</p>
   </div>
 </Link>
@@ -147,7 +147,7 @@ updateProfile({ connections: updatedConnections });
                     className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs transition border whitespace-nowrap flex-shrink-0 ${
                       isFollowing
                         ? "bg-green-600 text-white border-green-600 hover:bg-green-700"
-                        : "bg-transparent text-gray-700 border-gray-400 hover:bg-gray-100"
+                        : "bg-transparent text-white border-gray-400"
                     }`}
                     aria-label={isFollowing ? "Unfollow user" : "Follow user"}
                   >

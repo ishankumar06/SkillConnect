@@ -6,12 +6,53 @@ import { useUserProfile } from "../context/UserProfileContext";
 import { useUsers } from "../context/UsersContext";
 import bgImage from '../assets/bgImage.png';
 
+function SuggestedItem({ userId, name, title, avatarUrl, isFollowed, onToggleFollow }) {
+  return (
+    <div className="flex justify-between items-center bg-[#403d41] p-4 rounded-xl shadow mb-3 w-full relative">
+      <div className="flex items-center gap-4 flex-1 min-w-0">
+        <Link
+          to={`/profile/${userId}`}
+          className="flex items-center gap-4 flex-1 min-w-0 cursor-pointer"
+        >
+          {avatarUrl ? (
+            <img
+              src={avatarUrl}
+              alt={`${name} avatar`}
+              className="w-14 h-14 rounded-full object-cover border-2 border-blue-500 flex-shrink-0"
+            />
+          ) : (
+            <div className="w-14 h-14 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-lg flex-shrink-0">
+              {name?.charAt(0) || "?"}
+            </div>
+          )}
+          <div className="min-w-0">
+            <h4 className="font-semibold text-white text-lg truncate">{name}</h4>
+            <p className="text-gray-300 text-sm truncate">{title}</p>
+          </div>
+        </Link>
+      </div>
+
+      <button
+        onClick={onToggleFollow}
+        className={`text-sm uppercase px-4 py-2 rounded-lg border-2 transition-all whitespace-nowrap ${
+          isFollowed
+            ? "bg-blue-600 text-white border-blue-600 cursor-not-allowed shadow-[3px_3px_0_0_#60a5fa]"
+            : "text-[#fafafa] border-[#fafafa] bg-[#252525] shadow-[3px_3px_0_0_#fafafa] hover:bg-[#fafafa] hover:text-black hover:shadow-[1px_1px_0_0_#fafafa] cursor-pointer"
+        } active:shadow-none active:translate-x-[2px] active:translate-y-[2px]`}
+      >
+        {isFollowed ? "Following" : "Follow"}
+      </button>
+    </div>
+  );
+}
+
 export default function YouKnow() {
   const { userId } = useAuth();
   const { profile, updateProfile } = useUserProfile();
   const { allUsers, addOrUpdateUser } = useUsers();
 
   const [followedIds, setFollowedIds] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     if (profile?.connections && JSON.stringify(profile.connections) !== JSON.stringify(followedIds)) {
@@ -23,15 +64,15 @@ export default function YouKnow() {
 
   const suggestions = Object.values(allUsers).filter(
     (user) => user._id !== userId && !followedIds.includes(user._id)
-    
-  
-    
+  );
+
+  const filteredSuggestions = suggestions.filter((user) =>
+    user.fullName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const toggleFollow = (id) => {
     if (!userId) {
       alert("Please login to follow users");
-     
       return;
     }
 
@@ -51,7 +92,7 @@ export default function YouKnow() {
 
   return (
     <div
-      className="bg-white shadow-lg rounded-2xl p-6 max-w-full overflow-x-auto"
+      className="w-full px-6 py-6 bg-[#403d41] rounded-2xl shadow-md mt-6 min-h-screen"
       style={{
         backgroundImage: `url(${bgImage})`,
         backgroundRepeat: 'no-repeat',
@@ -59,52 +100,45 @@ export default function YouKnow() {
         backgroundPosition: 'center',
       }}
     >
-      <h2 className="text-2xl font-extrabold text-blue-800 mb-6">Suggested for you</h2>
-      {suggestions.length === 0 ? (
-        <p className="text-gray-500 text-sm">No suggestions available.</p>
+      <div className="flex justify-between items-center mb-6">
+        <div>
+          <h1 className="text-3xl font-bold text-white mb-1">Suggested for You</h1>
+          <p className="text-gray-300 text-lg">People you may know</p>
+        </div>
+        <input
+          type="text"
+          placeholder="Search suggestions..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="border border-gray-300 bg-[#252525] rounded-lg px-4 py-2 text-sm w-64 focus:outline-none focus:ring-2 focus:ring-blue-500 text-white placeholder-gray-400"
+        />
+      </div>
+
+      {filteredSuggestions.length > 0 ? (
+        filteredSuggestions.map((user) => (
+          <SuggestedItem
+            key={user._id}
+            userId={user._id}
+            name={user.fullName}
+            title={user.role || user.title || "Professional"}
+            avatarUrl={user.profilePic || user.avatarUrl}
+            isFollowed={followedIds.includes(user._id)}
+            onToggleFollow={() => toggleFollow(user._id)}
+          />
+        ))
       ) : (
-        <div className="space-y-6">
-          {suggestions.map((user) => {
-             console.log("Rendering user:", user.fullName, "| ID:", user._id);
-            const isFollowed = followedIds.includes(user._id);
-            return (
-              <div
-                key={user._id}
-              
-                className="flex items-center gap-5 p-6 bg-gray-50 rounded-2xl shadow-md hover:shadow-lg transition"
-              >
-                <Link
-                  to={`/profile/${user._id}`}
-                
-                  
-                  className="flex items-center gap-4 flex-1 min-w-0 cursor-pointer"
-                >
-                  <img
-                    src={user.profilePic || user.avatarUrl}
-                    alt={`${user.fullName} avatar`}
-                    className="w-12 h-12 rounded-full border-2 border-blue-300 object-cover"
-                  />
-                  <div>
-                    <h3 className="font-bold text-lg text-blue-900 truncate">{user.fullName}</h3>
-                    <p className="text-xs text-gray-600">{user.role || user.title}</p>
-                  </div>
-                </Link>
-                <button
-                  onClick={() => toggleFollow(user._id)}
-                  className={`bg-white text-sm font-medium rounded-full px-5 py-2 border transition whitespace-nowrap select-none shadow ${
-                    isFollowed
-                      ? "text-green-600 border-green-600 hover:bg-green-100"
-                      : "text-gray-700 border-gray-400 hover:bg-gray-100"
-                  }`}
-                >
-                  {isFollowed ? "Following" : "Follow"}
-                </button>
-              </div>
-            );
-          })}
+        <div className="text-center py-12">
+          <div className="w-24 h-24 bg-blue-100 rounded-full mx-auto mb-4 flex items-center justify-center">
+            <UserPlus size={32} className="text-blue-600" />
+          </div>
+          <h3 className="text-xl font-semibold text-gray-300 mb-2">
+            {searchTerm ? "No matching suggestions" : "No more suggestions"}
+          </h3>
+          <p className="text-gray-500">
+            {searchTerm ? "Try a different search term" : "Follow people to see suggestions"}
+          </p>
         </div>
       )}
     </div>
   );
 }
-

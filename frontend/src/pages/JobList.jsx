@@ -38,16 +38,16 @@ export default function JobList() {
         backgroundPosition: "center",
       }}
     >
-      <h2 className="text-2xl font-extrabold text-black-800 mb-4">Jobs You Posted</h2>
+      <h2 className="text-2xl font-extrabold text-white mb-4">Jobs You Posted</h2>
 
       {userJobs.length === 0 ? (
-        <p className="text-gray-500 text-center mt-10">No jobs posted yet.</p>
+        <p className="text-white text-center mt-10">No jobs posted yet.</p>
       ) : (
         <div className="space-y-6">
           {userJobs.map((job) => (
             <div
               key={job._id}
-              className={`flex items-center gap-5 px-8 py-6 rounded-2xl border-l-8 border-black-300 shadow-md bg-white
+              className={`flex items-center gap-5 px-8 py-6 rounded-2xl border-l-8 border-black-300  bg-[#403d41]
                 transition-all duration-200
                 hover:shadow-lg`}
               style={{
@@ -60,15 +60,15 @@ export default function JobList() {
                 <div className="flex justify-between items-center">
                   <div>
                     <div className="font-bold text-lg text-black-900 truncate">{job.title}</div>
-                    <div className="text-sm text-gray-500">{job.author}</div>
+                    <div className="text-sm text-white">{job.author}</div>
                   </div>
                   <span className="bg-black-50 text-black-500 text-xs font-semibold px-3 py-1 rounded-full ml-4">
                     {job.type || job.workType}
                   </span>
                 </div>
 
-                {job.address && <div className="mt-1 text-xs text-gray-400">{job.address}</div>}
-                <div className="text-gray-600 text-sm mt-2">{job.content}</div>
+                {job.address && <div className="mt-1 text-xs text-white">{job.address}</div>}
+                <div className="text-white text-sm mt-2">{job.content}</div>
 
                 {job.image && (
                   <img

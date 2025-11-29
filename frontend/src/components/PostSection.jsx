@@ -126,7 +126,7 @@ export default function PostSection() {
   return (
     <form
       onSubmit={handlePost}
-      className="max-w-3xl mx-auto p-6 space-y-6 rounded-2xl bg-white shadow-md"
+      className="max-w-3xl mx-auto p-6 space-y-6 rounded-2xl bg-transparent "
       noValidate
     >
       <input
@@ -158,7 +158,7 @@ export default function PostSection() {
           <div key={field.name} className="flex gap-4 items-center">
             {icon}
             <label className="flex-1 block">
-              <span className="text-gray-900 font-semibold">
+              <span className="text-black font-semibold">
                 {field.placeholder}
                 {field.required && <span className="text-red-600 ml-1">*</span>}
               </span>
@@ -168,7 +168,7 @@ export default function PostSection() {
                 onChange={handleChange}
                 placeholder={field.placeholder}
                 rows={field.rows}
-                className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 resize-none outline-none text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 transition"
+                className="mt-1 w-full border border-gray-300 rounded-md px-3 py-2 resize-none outline-none text-gray-900  placeholder-gray-400 focus:ring-2 focus:ring-blue-500 transition"
                 required={field.required}
               />
             </label>

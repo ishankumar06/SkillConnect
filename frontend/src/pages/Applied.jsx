@@ -86,7 +86,7 @@ export default function Applied() {
       {appliedJobDetails.map((job) => (
         <div
           key={job._id || job.id}
-          className={`flex items-center gap-5 px-8 py-6 rounded-2xl border-l-8 border-black-300 shadow-md bg-white
+          className={`flex items-center gap-5 px-8 py-6 rounded-2xl border-l-8 border-black-300 shadow-md bg-[#403d41]
             transition-all duration-200 hover:shadow-lg`}
           style={{
             boxShadow: "0 6px 24px 0 #e4ebfd",
@@ -102,7 +102,7 @@ export default function Applied() {
                 <div className="font-bold text-lg text-black-900 truncate">
                   {job.title}
                 </div>
-                <div className="text-sm text-gray-500">{job.company}</div>
+                <div className="text-sm text-white">{job.company}</div>
               </div>
               <span
                 className={`px-3 py-1 rounded-full text-xs font-semibold ${
@@ -117,8 +117,8 @@ export default function Applied() {
               </span>
             </div>
 
-            <div className="mt-1 text-xs text-gray-400">{job.location}</div>
-            <div className="text-gray-600 text-sm mt-2 line-clamp-2">
+            <div className="mt-1 text-xs text-white">{job.location}</div>
+            <div className="text-white text-sm mt-2 line-clamp-2">
               {job.content || job.description || "No description available."}
             </div>
 
@@ -130,7 +130,7 @@ export default function Applied() {
               />
             )}
 
-            <p className="text-xs text-gray-400 mt-2">
+            <p className="text-xs text-white mt-2">
               Applied on: {new Date(job.appliedAt).toLocaleDateString()}
             </p>
 

@@ -10,46 +10,56 @@ export function UsersProvider({ children }) {
 
   // Fetch users from backend
   const fetchUsers = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await api.get("/users");
-      // Convert array to object map by id for consistency
-      const usersMap = response.data.reduce((acc, user) => {
-        acc[user._id] = user;
-        return acc;
-      }, {});
-      setAllUsers(usersMap);
-    } catch (err) {
-      setError("Failed to load users");
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  setLoading(true);
+  setError(null);
+  try {
+    const response = await api.get("/users"); // include /api
+    const usersArray = response.data.users || []; // handle wrapped payload
+
+    const usersMap = usersArray.reduce((acc, user) => {
+      acc[user._id] = user;
+      return acc;
+    }, {});
+
+    setAllUsers(usersMap);
+  } catch (err) {
+    setError("Failed to load users");
+    console.error(err);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   // Add or update user via backend API
-  const addOrUpdateUser = async (user) => {
-    setLoading(true);
-    setError(null);
-    try {
-      let response;
-      if (user._id) {
-        response = await api.put(`/users/${user._id}`, user);
-      } else {
-        response = await api.post("/users", user);
-      }
-      setAllUsers((prev) => ({
-        ...prev,
-        [response.data._id]: response.data,
-      }));
-    } catch (err) {
-      setError("Failed to save user");
-      console.error(err);
-    } finally {
-      setLoading(false);
+ const addOrUpdateUser = async (user) => {
+  setLoading(true);
+  setError(null);
+  try {
+    let response;
+
+    if (user._id) {
+      // update existing user
+      response = await api.put(`/users/${user._id}`, user);
+    } else {
+      // create new user
+      response = await api.post("/api/users", user);
     }
-  };
+
+    const savedUser = response.data.user || response.data; // handle both shapes
+
+    setAllUsers((prev) => ({
+      ...prev,
+      [savedUser._id]: savedUser,
+    }));
+  } catch (err) {
+    setError("Failed to save user");
+    console.error(err);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   // Remove user by ID via backend
   const removeUser = async (userId) => {

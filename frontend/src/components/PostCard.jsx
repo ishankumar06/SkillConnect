@@ -154,7 +154,7 @@ export default function PostCard({ post }) {
 
   const followButtonClass = isFollowing
     ? "bg-[#403d41] text-white border-[#403d41]"
-    : "bg-transparent text-gray-700 border-gray-400 hover:bg-gray-100";
+    : "bg-transparent text-white border-gray-400 hover:bg-white";
 
   let imageSrc = finalJobImage;
   if (!hasValidString(imageSrc)) {
@@ -192,13 +192,13 @@ export default function PostCard({ post }) {
             className="w-16 h-16 rounded-full object-cover border"
           />
           <div>
-            <h3 className="font-semibold text-lg flex items-center gap-2 hover:underline">
+            <h3 className="font-semibold text-lg flex items-center gap-2 hover:underline text-white">
               {displayAuthor.fullName || displayAuthor}
-              <span className="text-gray-600 text-sm font-normal">
+              <span className="text-white text-sm font-normal">
                 {workType || "Full Time"}
               </span>
             </h3>
-            <p className="text-sm text-gray-500">{time || "Just now"}</p>
+            <p className="text-sm text-white">{time || "Just now"}</p>
           </div>
         </div>
 
@@ -206,7 +206,7 @@ export default function PostCard({ post }) {
           <button
   onClick={handleShare}
   aria-label="Share post"
-  className="text-gray-500 hover:text-white-600 transition"
+  className="text-white hover:text-white-600 transition"
 >
   <Share2 size={24} />
 </button>
@@ -229,7 +229,7 @@ export default function PostCard({ post }) {
         </div>
       </div>
 
-      <div className="flex justify-between text-gray-800 text-sm font-medium mb-4">
+      <div className="flex justify-between text-white text-sm font-medium mb-4">
         <p>
           <strong>Salary:</strong> {salary || "N/A"}
         </p>
@@ -244,7 +244,7 @@ export default function PostCard({ post }) {
         </div>
       )}
 
-      <p className="text-gray-700 flex-grow mt-4">{jobDescription}</p>
+      <p className="text-white flex-grow mt-4">{jobDescription}</p>
 
       <button
         onClick={onInterestedClick}
@@ -275,7 +275,7 @@ export default function PostCard({ post }) {
           onClick={onSaveClick}
           disabled={isAlreadySaved}
           className={`transition ${
-            isAlreadySaved ? "text-white-600" : "text-gray-500 hover:text-white"
+            isAlreadySaved ? "text-gray-600" : "text-gray-500 hover:text-white"
           }`}
         >
           <Save size={24} />

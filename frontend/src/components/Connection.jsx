@@ -16,7 +16,7 @@ function ConnectionItem({ userId, name, title, avatarUrl, onUnfollow }) {
   };
 
   return (
-    <div className="flex justify-between items-center bg-white p-4 rounded-xl shadow mb-3 w-full relative">
+    <div className="flex justify-between items-center bg-[#403d41] p-6 rounded-2xl border-l-8 border-black-300 mb-4 w-full relative transition-all duration-200 hover:shadow-lg" style={{ boxShadow: "0 6px 24px 0 #e4ebfd" }}>
       <div className="flex items-center gap-4 flex-1 min-w-0">
         <Link
           to={`/profile/${userId}`}
@@ -26,43 +26,43 @@ function ConnectionItem({ userId, name, title, avatarUrl, onUnfollow }) {
             <img
               src={avatarUrl}
               alt={`${name} avatar`}
-              className="w-14 h-14 rounded-full object-cover border-2 border-green-500 flex-shrink-0"
+              className="w-14 h-14 rounded-full object-cover border-2 border-green-400 flex-shrink-0"
             />
           ) : (
-            <div className="w-14 h-14 rounded-full bg-green-100 flex items-center justify-center text-green-600 font-bold text-lg flex-shrink-0">
+            <div className="w-14 h-14 rounded-full bg-green-500/20 flex items-center justify-center text-green-300 font-bold text-lg flex-shrink-0 border-2 border-green-400">
               {name?.charAt(0) || "?"}
             </div>
           )}
           <div className="min-w-0">
-            <h4 className="font-semibold text-gray-900 text-lg truncate">{name}</h4>
-            <p className="text-gray-500 text-sm truncate">{title}</p>
+            <h4 className="font-semibold text-white text-lg truncate">{name}</h4>
+            <p className="text-gray-300 text-sm truncate">{title}</p>
           </div>
         </Link>
       </div>
 
       <button
         onClick={handleUnfollowClick}
-        className="ml-auto self-center text-sm text-[#fafafa] uppercase px-3 py-1 rounded-lg border-2 border-[#fafafa] 
-          bg-[#252525] shadow-[3px_3px_0_0_#fafafa] cursor-pointer
-          active:shadow-none active:translate-x-[2px] active:translate-y-[2px]
-          transition whitespace-nowrap max-w-full"
+        className="ml-auto self-center text-sm text-white uppercase px-4 py-2 rounded-xl border-2 border-white 
+          bg-[#252525] hover:bg-[#2a272a] cursor-pointer
+          active:translate-x-[1px] active:translate-y-[1px]
+          transition whitespace-nowrap max-w-full font-semibold"
       >
         Followed
       </button>
 
       {showConfirm && (
-        <div className="absolute top-full right-0 mt-2 w-56 bg-white rounded shadow-lg p-4 z-10 border border-gray-300">
-          <p className="text-gray-800 mb-3">Unfollow {name}?</p>
-          <div className="flex justify-end gap-2">
+        <div className="absolute top-full right-0 mt-2 w-64 bg-[#4a474b] rounded-xl p-4 z-10 border border-gray-600 backdrop-blur-sm" style={{ boxShadow: "0 6px 24px 0 #e4ebfd" }}>
+          <p className="text-white mb-4">Unfollow {name}?</p>
+          <div className="flex justify-end gap-3">
             <button
               onClick={handleCancel}
-              className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300"
+              className="px-4 py-2 rounded-lg bg-gray-600 hover:bg-gray-500 text-gray-200 transition"
             >
               Cancel
             </button>
             <button
               onClick={handleConfirm}
-              className="px-3 py-1 rounded bg-red-600 text-white hover:bg-red-700"
+              className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition font-semibold"
             >
               Unfollow
             </button>
@@ -101,23 +101,24 @@ export default function Connection() {
 
   return (
     <div
-      className="w-full px-6 py-6 bg-gray-50 rounded-2xl shadow-md mt-6 min-h-screen"
+      className="w-full px-8 py-8 bg-[#403d41] rounded-3xl border-l-8 border-black-300 min-h-screen"
       style={{
         backgroundImage: `url(${bgImage})`,
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
+        boxShadow: "0 6px 24px 0 #e4ebfd",
       }}
     >
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Your Connected Profiles</h1>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-4xl font-extrabold text-white">Your Connected Profiles</h1>
         {/* Search input */}
         <input
           type="text"
           placeholder="Search by name..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="border border-gray-300 rounded px-3 py-1 text-sm w-64 focus:outline-none focus:ring-2 focus:ring-blue-600"
+          className="border border-gray-600 bg-[#4a474b]/50 rounded-xl px-4 py-3 text-sm w-72 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white placeholder-gray-400"
         />
       </div>
 
@@ -133,7 +134,7 @@ export default function Connection() {
           />
         ))
       ) : (
-        <p className="text-gray-500 text-center">No connections found.</p>
+        <p className="text-gray-300 text-center text-lg py-12">No connections found.</p>
       )}
     </div>
   );

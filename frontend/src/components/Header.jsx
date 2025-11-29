@@ -91,7 +91,7 @@ export default function Header() {
         </button>
 
         {openUser && (
-          <div className="absolute right-0 mt-2 w-56 bg-white rounded-lg shadow-lg z-20">
+          <div className="absolute right-0 mt-2 w-56 bg-[#403d41] rounded-lg shadow-lg z-20">
             <div className="flex items-center gap-3 px-4 py-3 border-b">
               <img
                 src={profile?.profilePic || user?.profilePic || "/default-profile.png"}
@@ -113,7 +113,7 @@ export default function Header() {
               <li>
                 <Link
                   to="/Applied"
-                  className="block px-4 py-2 hover:bg-gray-100"
+                  className="block px-4 py-2 hover:underline"
                   onClick={() => setOpenUser(false)}
                 >
                   My Jobs
@@ -131,7 +131,7 @@ export default function Header() {
               <li>
                 <Link
                   to="/save"
-                  className="block px-4 py-2 hover:bg-gray-100"
+                  className="block px-4 py-2 hover:underline"
                   onClick={() => setOpenUser(false)}
                 >
                   Saved
@@ -140,7 +140,7 @@ export default function Header() {
               <li>
                 <button
                   onClick={handleLogout}
-                  className="w-full text-left px-4 py-2 hover:bg-gray-100"
+                  className="block px-4 py-2 hover:underline"
                 >
                   Logout
                 </button>

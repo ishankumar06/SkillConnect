@@ -2,21 +2,22 @@ import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useApplication } from "../context/ApplicationContext";
 import { useAuth } from "@/context/AuthContext";
+import bgImage from "../assets/bgImage.png";
 
 const icon = (
-  <span className="flex items-center justify-center w-12 h-12 rounded-xl shadow-sm bg-gray-100">
-    <i className="fas fa-file-alt text-2xl text-gray-500" />
+  <span className="flex items-center justify-center w-12 h-12 rounded-xl shadow-sm bg-[#403d41]">
+    <i className="fas fa-file-alt text-2xl text-white" />
   </span>
 );
 
 function InputRow({ label, id, required, children, error }) {
   return (
-    <div className="flex flex-col bg-white rounded-2xl shadow p-4 gap-2">
-      <label htmlFor={id} className="font-semibold text-gray-900 flex items-center gap-1">
-        {label} {required && <span className="text-red-600">*</span>}
+    <div className="flex flex-col bg-[#403d41] rounded-2xl shadow p-4 gap-2 border-l-8 border-black-300" style={{ boxShadow: "0 6px 24px 0 #e4ebfd" }}>
+      <label htmlFor={id} className="font-semibold text-white flex items-center gap-1">
+        {label} {required && <span className="text-red-400">*</span>}
       </label>
       <div className="flex gap-4 items-center">{icon}{children}</div>
-      {error && <p className="text-red-600 mt-1 text-sm">{error}</p>}
+      {error && <p className="text-red-400 mt-1 text-sm">{error}</p>}
     </div>
   );
 }
@@ -96,20 +97,29 @@ export default function ApplyPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
+    <div
+      className="min-h-screen flex items-center justify-center p-6"
+      style={{
+        backgroundImage: `url(${bgImage})`,
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-3xl bg-white rounded-3xl p-10 shadow-lg space-y-8"
+        className="w-full max-w-3xl bg-[#403d41] rounded-3xl p-10 shadow-lg space-y-8 border-l-8 border-black-300"
+        style={{ boxShadow: "0 6px 24px 0 #e4ebfd" }}
         noValidate
       >
-        <h1 className="text-4xl font-bold text-center text-gray-900">Apply for Job</h1>
+        <h1 className="text-4xl font-bold text-center text-white">Apply for Job</h1>
 
         {statusMessage && (
           <div
-            className={`p-3 rounded ${
+            className={`p-3 rounded-xl border-l-4 ${
               statusMessage.toLowerCase().includes("success")
-                ? "bg-green-100 text-green-800"
-                : "bg-red-100 text-red-800"
+                ? "bg-green-500/20 text-green-200 border-green-400"
+                : "bg-red-500/20 text-red-200 border-red-400"
             }`}
             role="alert"
           >
@@ -125,7 +135,7 @@ export default function ApplyPage() {
             value={formData.name}
             onChange={handleChange}
             placeholder="Enter your full name"
-            className="mt-2 w-full rounded-xl border border-gray-300 p-3 focus:outline-none focus:ring-4 focus:ring-blue-400 transition"
+            className="mt-2 w-full rounded-xl border border-gray-600 p-3 focus:outline-none focus:ring-4 focus:ring-blue-400 transition bg-[#4a474b]/50 text-white placeholder-gray-400"
             aria-invalid={!!errors.name}
             aria-describedby={errors.name ? "name-error" : undefined}
             required
@@ -140,7 +150,7 @@ export default function ApplyPage() {
             type="file"
             accept=".pdf,.doc,.docx"
             onChange={handleChange}
-            className="mt-2 w-full cursor-pointer"
+            className="mt-2 w-full cursor-pointer file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
             aria-invalid={!!errors.resumeFile}
             aria-describedby={errors.resumeFile ? "resumeFile-error" : undefined}
             required
@@ -151,7 +161,7 @@ export default function ApplyPage() {
         <button
           type="button"
           onClick={() => navigate("/homeresume")}
-          className="w-full bg-white text-yellow-600 border border-yellow-200 hover:bg-yellow-50 hover:border-yellow-500 rounded-xl shadow-sm px-4 transition"
+          className="w-full bg-white text-yellow-600 border border-yellow-200 hover:bg-yellow-50 hover:border-yellow-500 rounded-xl shadow-sm px-4 py-3 transition font-semibold"
         >
           Generate Resume using AI
         </button>
@@ -164,7 +174,7 @@ export default function ApplyPage() {
             onChange={handleChange}
             rows={5}
             placeholder="Write a short bio..."
-            className="mt-2 w-full rounded-xl border border-gray-300 p-3 resize-none focus:outline-none focus:ring-4 focus:ring-blue-400 transition"
+            className="mt-2 w-full rounded-xl border border-gray-600 p-3 resize-none focus:outline-none focus:ring-4 focus:ring-blue-400 transition bg-[#4a474b]/50 text-white placeholder-gray-400"
             aria-invalid={!!errors.about}
             aria-describedby={errors.about ? "about-error" : undefined}
             required
@@ -180,7 +190,7 @@ export default function ApplyPage() {
             value={formData.skills}
             onChange={handleChange}
             placeholder="e.g. JavaScript, React, Node.js"
-            className="mt-2 w-full rounded-xl border border-gray-300 p-3 focus:outline-none focus:ring-4 focus:ring-blue-400 transition"
+            className="mt-2 w-full rounded-xl border border-gray-600 p-3 focus:outline-none focus:ring-4 focus:ring-blue-400 transition bg-[#4a474b]/50 text-white placeholder-gray-400"
             aria-invalid={!!errors.skills}
             aria-describedby={errors.skills ? "skills-error" : undefined}
             required
@@ -191,9 +201,13 @@ export default function ApplyPage() {
         <button
           type="submit"
           disabled={submitting}
-          className="bg-white text-yellow-600 border border-yellow-200 hover:bg-yellow-50 hover:border-yellow-500 rounded-xl shadow-sm px-4 transition"
+          className={`w-full py-3 px-4 transition font-bold rounded-xl shadow-sm flex items-center justify-center gap-2 ${
+            submitting
+              ? "bg-gray-500 text-gray-300 cursor-not-allowed"
+              : "bg-white text-yellow-600 border border-yellow-200 hover:bg-yellow-50 hover:border-yellow-500"
+          }`}
         >
-          Submit Application
+          {submitting ? "Submitting..." : "Submit Application"}
         </button>
       </form>
     </div>

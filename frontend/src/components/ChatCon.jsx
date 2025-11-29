@@ -78,7 +78,7 @@ const ChatContainer = () => {
   }
 
   return (
-    <div className="h-full overflow-y-scroll relative backdrop-blur-lg">
+    <div className="h-full overflow-y-scroll relative backdrop-blur-lg border-transparent">
       {/* Header */}
       <div className="flex items-center gap-3 py-3 mx-4 border-b border-stone-500">
         <img
@@ -93,7 +93,7 @@ const ChatContainer = () => {
           alt="Selected user profile"
           className="w-8 rounded-full"
         />
-        <p className="flex-1 text-lg text-black flex items-center gap-2">
+        <p className="flex-1 text-lg text-white flex items-center gap-2">
           {selectedUser.fullName}
           {onlineUsers.includes(selectedUser._id) && (
             <span className="w-2 h-2 rounded-full bg-green-500"></span>
@@ -124,7 +124,7 @@ const ChatContainer = () => {
                 <p
                   className={`p-2 max-w-[200px] md:text-sm font-light rounded-lg mb-8 break-all ${
                     isSender
-                      ? 'rounded-br-none bg-green-500/30 text-black'
+                      ? 'rounded-br-none bg-[#403d41] text-black'
                       : 'rounded-bl-none bg-gray-300 text-black'
                   }`}
                 >
@@ -164,7 +164,7 @@ const ChatContainer = () => {
             hidden
           />
           <label htmlFor="image">
-            <img src={assets.gallery_icon} alt="Attach" className="w-5 mr-2 cursor-pointer bg-green-500" />
+            <img src={assets.gallery_icon} alt="Attach" className="w-5 mr-2 cursor-pointer bg-[#403d41]" />
           </label>
         </div>
         <img

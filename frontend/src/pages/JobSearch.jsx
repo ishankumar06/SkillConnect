@@ -53,7 +53,7 @@ export default function JobSearch() {
             backgroundPosition: 'center',
           }}
           >
-      <h2 className="text-2xl font-bold text-black-800 mb-4">Search for Jobs</h2>
+      <h2 className="text-2xl font-bold text-white mb-4">Search for Jobs</h2>
 
       <SearchBar onSearch={handleSearch} value={searchTerm} />
 

@@ -12,25 +12,21 @@ export const ChatProvider = ({ children }) => {
 
   const { socket, axios, authUser } = useContext(AuthContext);
 
-  // ✅ ADDED: fetchChats for DataPreloader (renamed from getUsers)
-  const fetchChats = async () => {
+  const fetchChatUsers = async () => {
     try {
       const { data } = await axios.get("/api/messages/users");
       if (data.success) {
-        setUsers(data.users);
+        setUsers(data.users); 
         setUnseenMessages(data.unseenMessages);
-        console.log("✅ Chat users preloaded:", data.users.length);
+        console.log(" Chat users loaded:", data.users.length);
       }
     } catch (error) {
-      console.error("Failed to preload chats:", error);
-      toast.error(error.message || "Failed to load chats");
+      console.error("Failed to load chat users:", error);
     }
   };
 
-  // Keep original getUsers for backward compatibility
-  const getUsers = fetchChats;
+  const getUsers = fetchChatUsers;
 
-  // Fetch messages for the selected user
   const getMessages = async (userId) => {
     try {
       const { data } = await axios.get(`/api/messages/${userId}`);
@@ -38,11 +34,10 @@ export const ChatProvider = ({ children }) => {
         setMessages(data.messages);
       }
     } catch (error) {
-      toast.error(error.message || "Failed to load messages");
+      toast.error("Failed to load messages");
     }
   };
 
-  // Send message to selected user
   const sendMessage = async (messageData) => {
     if (!selectedUser) {
       toast.error("No user selected");
@@ -56,64 +51,52 @@ export const ChatProvider = ({ children }) => {
           senderProfilePic: authUser?.profilePic || null,
         };
         setMessages((prevMessages) => [...prevMessages, enrichedNewMessage]);
-      } else {
-        toast.error(data.message || "Failed to send message");
       }
     } catch (error) {
-      toast.error(error.message || "Failed to send message");
+      toast.error("Failed to send message");
     }
   };
 
-  // Subscribe to new messages from socket
   const subscribeToMessages = () => {
     if (!socket) return;
+    
     socket.on("newMessage", (newMessage) => {
-      const senderUser =
-        users.find((u) => u._id === newMessage.senderId) ||
-        (authUser && authUser._id === newMessage.senderId ? authUser : null);
-
-      const enrichedMessage = {
-        ...newMessage,
-        senderProfilePic: senderUser?.profilePic || null,
-      };
-
       if (selectedUser && newMessage.senderId === selectedUser._id) {
-        enrichedMessage.seen = true;
-        setMessages((prevMessages) => [...prevMessages, enrichedMessage]);
-        axios.put(`/api/messages/mark/${newMessage._id}`).catch(() => {
-          toast.error("Failed to mark message as seen");
-        });
+        // Current chat - add to messages
+        setMessages((prevMessages) => [...prevMessages, newMessage]);
+        axios.put(`/api/messages/mark/${newMessage._id}`).catch(() => {});
       } else {
+        // Other chat - increment unseen
         setUnseenMessages((prev) => ({
           ...prev,
-          [newMessage.senderId]: prev[newMessage.senderId] ? prev[newMessage.senderId] + 1 : 1,
+          [newMessage.senderId]: (prev[newMessage.senderId] || 0) + 1,
         }));
       }
+      
+      // Refresh chat users list
+      fetchChatUsers();
     });
   };
 
-  // Unsubscribe from socket messages
   const unsubscribeFromMessages = () => {
     if (socket) socket.off("newMessage");
   };
 
   useEffect(() => {
     subscribeToMessages();
-    return () => unsubscribeFromMessages();
-  }, [socket, selectedUser]);
+    return unsubscribeFromMessages;
+  }, [socket, selectedUser]); 
 
-  // Compute total unread messages count
   const unreadCount = Object.values(unseenMessages).reduce((total, count) => total + count, 0);
 
   const value = {
     messages,
     users,
     selectedUser,
-    getUsers,        // ✅ Original name (unchanged)
-    fetchChats,      // ✅ NEW for DataPreloader
+    setSelectedUser,
+    getUsers,
     getMessages,
     sendMessage,
-    setSelectedUser,
     unseenMessages,
     setUnseenMessages,
     unreadCount,

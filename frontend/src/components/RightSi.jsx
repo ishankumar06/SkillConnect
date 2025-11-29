@@ -16,7 +16,7 @@ const RightSidebar = () => {
   }, [messages])
 
   return selectedUser && (
-    <div className={`bg-[#8185B2]/10 text-black w-full relative overflow-y-scroll flex flex-col justify-between ${selectedUser ? "max-md:hidden" : ""}`}>
+    <div className={`bg-[#8185B2]/10 text-white w-full relative overflow-y-scroll flex flex-col justify-between ${selectedUser ? "max-md:hidden" : ""}`}>
       <div>
         <div className='pt-16 flex flex-col items-center gap-2 text-xs font-light mx-auto'>
           <img src={selectedUser?.profilePic || assets.avatar_icon} alt="Profile" className='w-20 aspect-[1/1] rounded-full' />
@@ -40,7 +40,7 @@ const RightSidebar = () => {
       </div>
       <button
         onClick={() => logout()}
-        className='bg-green-500/30 text-black text-sm px-5 py-2 rounded-full mx-auto my-5'
+        className='bg-[#403d41] text-white text-sm px-5 py-2 rounded-full mx-auto my-5'
       >
         Logout
       </button>
